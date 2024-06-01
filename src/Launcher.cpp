@@ -4,7 +4,8 @@
 
 void loadAllReferences() {
     AssetsManager manager = AssetsManager::getInstance();
-    // manager.loadTexture("image.png");
+    manager.loadTexture(START_SCREEN_BACKGROUND);
+    manager.loadFont(MONTSERRAT_FONT);
 }
 
 int main() {

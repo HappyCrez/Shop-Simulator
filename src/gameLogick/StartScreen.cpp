@@ -6,6 +6,7 @@ StartScreen::StartScreen(sf::Vector2f& wndSize) {
     
     btnBG = sf::Color(51,51,51,229);
     btn = Button({400, 400}, {0, 0}, btnBG);
+    btn.setLabel(AssetsManager::getInstance().loadFont(MONTSERRAT_FONT), "New Game", sf::Color::White, 24, ALIGN_CENTER);
 
     resize(wndSize);
 }

@@ -26,10 +26,10 @@ public:
     void setPosition(sf::Vector2f& size);
     void setBGTexture(sf::Texture* texture);
     void setBGColor(sf::Color color);
-    void setStroke(int size, sf::Color color);
+    void setOutline(int size, sf::Color color);
     
     // Label
-    void Button::setLabel(sf::Text& label);
+    void setLabel(sf::Text& label);
 
     void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align);
     void setFont(sf::Font& font);

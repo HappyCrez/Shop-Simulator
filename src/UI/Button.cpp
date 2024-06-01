@@ -42,16 +42,33 @@ void Button::setBGColor(sf::Color color) {
     rect.setFillColor(color);
 }
 
-void Button::setStroke(int size, sf::Color color) {
+void Button::setOutline(int size, sf::Color color) {
     rect.setOutlineThickness(size);
     rect.setOutlineColor(color);
 }
 
+//TODO::Update label pos by align
 void Button::updateLabelPos() {
-    //TODO::Update label pos by align
-    sf::Vector2f pos = rect.getPosition()+rect.getSize()/2.f;
-    pos = {pos.x - label.getCharacterSize()/2.f, pos.y};
-    std::cout << pos.x << " " << pos.y << "\n";
+    sf::Vector2f pos;
+    switch (align) {
+        case ALIGN_BOTTOM_LEFT:
+
+        break;
+        case ALIGN_BOTTOM_RIGHT:
+        
+        break;
+        case ALIGN_TOP_LEFT:
+        
+        break;
+        case ALIGN_TOP_RIGHT:
+        
+        break;
+        case ALIGN_CENTER:
+            pos = rect.getPosition()+rect.getSize()/2.f;
+            pos = {pos.x - label.getLocalBounds().width/2, pos.y - label.getCharacterSize()/2.f};
+        break;
+        default: throw;
+    }
     label.setPosition(pos);
 }
 
