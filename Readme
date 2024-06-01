@@ -1,0 +1,15 @@
+# Shop simulator
+Summer practice on theme "Life simulations"
+
+App writes on C++ for mostly Linux operation system, but using the multioperation instruments, so can be build on Windows or Unix.
+
+
+# Instruments
+1. original SFML library
+2. Cmake to build and compile
+
+
+# Author
+1. Vladimir Gorbunov Altstu PI-2x
+
+@ All code is writed by the author and distributed under the license. (See license file)
