@@ -11,3 +11,4 @@
 
 // Fonts
 #define MONTSERRAT_FONT "./assets/fonts/Montserrat.ttf"
+#define ROBOTO_FONT     "./assets/fonts/Roboto-Bold.ttf"

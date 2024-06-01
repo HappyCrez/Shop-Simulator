@@ -31,11 +31,11 @@ public:
     void setOutline(int size, sf::Color color);
     
     // Label
-    void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align);
+    void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align, sf::Text::Style style);
     void setFont(sf::Font& font);
     void setLabelContent(std::string content);
     void setTextColor(sf::Color color);
     void setFontSize(int size);
     void setAlign(int align);
-
+    void setStyle(sf::Text::Style style);
 };
