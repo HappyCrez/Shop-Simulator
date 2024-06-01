@@ -9,7 +9,11 @@
 
 class StartScreen : public sf::Drawable {
     sf::RectangleShape background;
-    Button btn;
+    Button load;
+    Button newGame;
+    Button settings;
+    Button exit;
+    
     sf::Color btnBG;
     sf::Color hoverBG;
     sf::Color outline;

@@ -9,7 +9,7 @@ void loadAllReferences() {
 }
 
 int main() {
-    sf::RenderWindow wnd(sf::VideoMode(640, 480), "Shop simulator");
+    sf::RenderWindow wnd(sf::VideoMode(), "Shop simulator", sf::Style::Fullscreen);
     
     loadAllReferences();
 

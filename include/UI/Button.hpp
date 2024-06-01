@@ -7,6 +7,8 @@
 
 class Button : public sf::Drawable {
     sf::RectangleShape rect;
+    sf::Vector2f size;
+    sf::Vector2f pos;
     sf::Text label;
     int align = ALIGN_TOP_LEFT;
 
@@ -22,15 +24,13 @@ public:
     void actionEvent(std::function<void(void)> action);
     
     // Rectangle
-    void setSize(sf::Vector2f& size);
-    void setPosition(sf::Vector2f& size);
+    void setSize(sf::Vector2f size);
+    void setPosition(sf::Vector2f size);
     void setBGTexture(sf::Texture* texture);
     void setBGColor(sf::Color color);
     void setOutline(int size, sf::Color color);
     
     // Label
-    void setLabel(sf::Text& label);
-
     void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align);
     void setFont(sf::Font& font);
     void setLabelContent(std::string content);

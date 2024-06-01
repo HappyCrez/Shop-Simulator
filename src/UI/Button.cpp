@@ -24,13 +24,15 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states = sf::Render
     target.draw(label, states);
 }
 
-void Button::setSize(sf::Vector2f& size) {
-    rect.setSize(size);
+void Button::setSize(sf::Vector2f size) {
+    this->size = size;
+    rect.setSize(this->size);
     updateLabelPos();
 }
 
-void Button::setPosition(sf::Vector2f& pos) {
-    rect.setPosition(pos);
+void Button::setPosition(sf::Vector2f pos) {
+    this->pos = pos;
+    rect.setPosition(this->pos);
     updateLabelPos();
 }
 
@@ -70,10 +72,6 @@ void Button::updateLabelPos() {
         default: throw;
     }
     label.setPosition(pos);
-}
-
-void Button::setLabel(sf::Text& label) {
-    this->label = label;
 }
 
 void Button::setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align) {
