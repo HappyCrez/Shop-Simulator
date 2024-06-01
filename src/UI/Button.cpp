@@ -1,0 +1,93 @@
+#include "UI/Button.hpp"
+
+Button::Button() { }
+
+Button::Button(sf::Vector2f size, sf::Vector2f pos) {
+    rect = sf::RectangleShape(size);
+    setPosition(pos);
+    this->align = align; 
+}
+
+Button::Button(sf::Vector2f size, sf::Vector2f pos, sf::Color bgColor) : Button(size, pos) {
+    rect.setFillColor(bgColor);
+}
+
+Button::Button(sf::Vector2f size, sf::Vector2f pos, sf::Texture* texture) : Button(size, pos) {
+    rect.setTexture(texture);
+}
+
+// Action on click
+void Button::actionEvent(std::function<void(void)> action) { action(); }
+
+void Button::draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const {
+    target.draw(rect, states);
+    target.draw(label, states);
+}
+
+void Button::setSize(sf::Vector2f& size) {
+    rect.setSize(size);
+    updateLabelPos();
+}
+
+void Button::setPosition(sf::Vector2f& pos) {
+    rect.setPosition(pos);
+    updateLabelPos();
+}
+
+void Button::setBGTexture(sf::Texture* texture) {
+    rect.setTexture(texture);
+}
+
+void Button::setBGColor(sf::Color color) {
+    rect.setFillColor(color);
+}
+
+void Button::setStroke(int size, sf::Color color) {
+    rect.setOutlineThickness(size);
+    rect.setOutlineColor(color);
+}
+
+void Button::updateLabelPos() {
+    //TODO::Update label pos by align
+    sf::Vector2f pos = rect.getPosition()+rect.getSize()/2.f;
+    pos = {pos.x - label.getCharacterSize()/2.f, pos.y};
+    std::cout << pos.x << " " << pos.y << "\n";
+    label.setPosition(pos);
+}
+
+void Button::setLabel(sf::Text& label) {
+    this->label = label;
+}
+
+void Button::setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align) {
+    label.setFont(font);
+    label.setString(content);
+    label.setCharacterSize(fontSize);
+    label.setFillColor(color);
+    this->align = align;
+    updateLabelPos();
+}
+
+void Button::setFont(sf::Font& font) {
+    label.setFont(font);
+    updateLabelPos();
+}
+
+void Button::setLabelContent(std::string content) {
+    label.setString(content);
+    updateLabelPos();
+}
+
+void Button::setFontSize(int fontSize) {
+    label.setCharacterSize(fontSize);
+    updateLabelPos();
+}
+
+void Button::setAlign(int align) {
+    this->align = align;
+    updateLabelPos();
+}
+
+void Button::setTextColor(sf::Color color) {
+    label.setFillColor(color);
+}
