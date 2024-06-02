@@ -4,10 +4,11 @@
 */
 #pragma once
 #include "dep.hpp"
+#include "Renderable.hpp"
 #include "loaders/AssetsManager.hpp"
 #include "UI/Button.hpp"
 
-class StartScreen : public sf::Drawable {
+class StartScreen : public Renderable {
     sf::RenderWindow& wnd;
     int& screenState;
     sf::RectangleShape background;
@@ -29,5 +30,5 @@ class StartScreen : public sf::Drawable {
     
 public:
     StartScreen(sf::RenderWindow &wnd, int& screenState);
-    void render(sf::Event& event);
+    virtual void render(sf::Event& event);
 };

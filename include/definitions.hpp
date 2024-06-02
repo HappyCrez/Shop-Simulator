@@ -4,6 +4,7 @@
 #define SCREEN_SETTINGS 1
 #define SCREEN_LOAD_SAVE 2
 #define SCREEN_GAME 3
+#define SCREENS_COUNT 4
 
 // Aligns
 #define ALIGN_TOP_LEFT 0
