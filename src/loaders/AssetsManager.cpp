@@ -1,21 +1,22 @@
 #include "loaders/AssetsManager.hpp"
 
-
 AssetsManager& AssetsManager::getInstance() {
     static AssetsManager instance = AssetsManager(); 
     return instance;
 }
 
 sf::Texture& AssetsManager::loadTexture(std::string filename) {
-    if (textureFiles.find(filename) != textureFiles.end()) return textureFiles[filename];
+    auto& textureMap = getInstance().textureFiles;
+    if (textureMap.find(filename) != textureMap.end()) return textureMap[filename];
     sf::Texture texture;
     texture.loadFromFile(filename);
-    return textureFiles[filename] = texture;
+    return textureMap[filename] = texture;
 }
 
 sf::Font& AssetsManager::loadFont(std::string filename) {
-    if (fontFiles.find(filename) != fontFiles.end()) return fontFiles[filename];
+    auto& fontMap = getInstance().fontFiles;
+    if (fontMap.find(filename) != fontMap.end()) return fontMap[filename];
     sf::Font font;
     font.loadFromFile(filename);
-    return fontFiles[filename] = font;
+    return fontMap[filename] = font;
 }

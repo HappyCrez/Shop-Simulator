@@ -3,7 +3,8 @@
 Button::Button() { }
 
 Button::Button(sf::Vector2f size, sf::Vector2f pos) {
-    rect = sf::RectangleShape(size);
+    rect = sf::RectangleShape();
+    setSize(size);
     setPosition(pos);
     this->align = align;
 }
@@ -16,8 +17,12 @@ Button::Button(sf::Vector2f size, sf::Vector2f pos, sf::Texture* texture) : Butt
     rect.setTexture(texture);
 }
 
-// Action on click
-void Button::actionEvent(std::function<void(void)> action) { action(); }
+bool Button::isInBounds(sf::Vector2i point) {
+    if (point.x > pos.x && point.x < pos.x+size.x &&
+        point.y > pos.y && point.y < pos.y+size.y)
+        return true;
+    return false;
+}
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const {
     target.draw(rect, states);
@@ -67,7 +72,7 @@ void Button::updateLabelPos() {
             break;
         case ALIGN_CENTER:
             pos = rect.getPosition()+rect.getSize()/2.f;
-            pos = {pos.x-label.getLocalBounds().width/2.f, pos.y-label.getLocalBounds().height/2.f};
+            pos = {round(pos.x-label.getLocalBounds().width/2.f), round(pos.y-label.getLocalBounds().height/2.f-5)};
             break;
         default: throw;
     }
@@ -110,4 +115,13 @@ void Button::setTextColor(sf::Color color) {
 
 void Button::setStyle(sf::Text::Style style) {
     label.setStyle(style);
+}
+
+// Getters
+sf::Vector2f Button::getSize() {
+    return size;
+}
+
+sf::Vector2f Button::getPosition() {
+    return pos;
 }

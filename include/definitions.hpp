@@ -1,3 +1,10 @@
+// Screens
+#define NO_SCREEN -1
+#define SCREEN_START_MENU 0
+#define SCREEN_SETTINGS 1
+#define SCREEN_LOAD_SAVE 2
+#define SCREEN_GAME 3
+
 // Aligns
 #define ALIGN_TOP_LEFT 0
 #define ALIGN_TOP_RIGHT 1

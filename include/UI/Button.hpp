@@ -21,8 +21,8 @@ public:
     Button(sf::Vector2f size, sf::Vector2f pos, sf::Color bgColor);
     Button(sf::Vector2f size, sf::Vector2f pos, sf::Texture* texture);
     
-    void actionEvent(std::function<void(void)> action);
-    
+    bool isInBounds(sf::Vector2i point);
+
     // Rectangle
     void setSize(sf::Vector2f size);
     void setPosition(sf::Vector2f size);
@@ -38,4 +38,7 @@ public:
     void setFontSize(int size);
     void setAlign(int align);
     void setStyle(sf::Text::Style style);
+
+    sf::Vector2f getSize();
+    sf::Vector2f getPosition();
 };

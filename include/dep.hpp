@@ -6,5 +6,6 @@
 #include <assert.h>
 #include <string>
 #include <map>
+#include <math.h>
 
 #include "definitions.hpp"

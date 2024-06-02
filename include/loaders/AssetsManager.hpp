@@ -12,6 +12,6 @@ class AssetsManager {
     AssetsManager() { /* Singleton */ }
 public:
     static AssetsManager& getInstance();
-    sf::Texture& loadTexture(std::string filename);
-    sf::Font& loadFont(std::string filename);
+    static sf::Texture& loadTexture(std::string filename);
+    static sf::Font& loadFont(std::string filename);
 };
