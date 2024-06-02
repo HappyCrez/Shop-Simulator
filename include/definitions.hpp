@@ -1,10 +1,4 @@
-// Screens
-#define NO_SCREEN -1
-#define SCREEN_START_MENU 0
-#define SCREEN_SETTINGS 1
-#define SCREEN_LOAD_SAVE 2
-#define SCREEN_GAME 3
-#define SCREENS_COUNT 4
+enum class Screens : int {no_screen = -1, start, settings, load_save, game, size};
 
 // Aligns
 #define ALIGN_TOP_LEFT 0
@@ -19,4 +13,4 @@
 
 // Fonts
 #define MONTSERRAT_FONT "./assets/fonts/Montserrat.ttf"
-#define ROBOTO_FONT     "./assets/fonts/Roboto-Bold.ttf"
+#define ROBOTO_BOLD_FONT     "./assets/fonts/Roboto-Bold.ttf"

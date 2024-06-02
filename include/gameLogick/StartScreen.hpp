@@ -8,14 +8,13 @@
 #include "loaders/AssetsManager.hpp"
 #include "UI/Button.hpp"
 
-class StartScreen : public Renderable {
+enum class Btns {loadSave = 0, startGame, settings, exit, size};
+
+class StartScreen : public Renderable {    
     sf::RenderWindow& wnd;
-    int& screenState;
+    Screens& screenState;
     sf::RectangleShape background;
-    Button load;
-    Button startGame;
-    Button settings;
-    Button exit;
+    std::vector<Button> btns;
     
     sf::Color btnBG;
     sf::Color hoverBG;
@@ -23,12 +22,15 @@ class StartScreen : public Renderable {
     int outlineSize = 1;
     int outlineHoverSize = 2;
 
-    void resize(sf::Vector2f &wndSize);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void render(sf::Event& event);
+
+    void resize(sf::Vector2f &wndSize);
+
+    Button createButton(sf::Vector2f size, std::string label);
     void onHover(Button& btn);
     void dropHover(Button& btn);
     
 public:
-    StartScreen(sf::RenderWindow &wnd, int& screenState);
-    virtual void render(sf::Event& event);
+    StartScreen(sf::RenderWindow &wnd, Screens& screenState);
 };
