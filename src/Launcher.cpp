@@ -1,14 +1,16 @@
 #include "dep.hpp"
-#include "Renderable.hpp"
 #include "loaders/AssetsManager.hpp"
+#include "gameLogick/Screen.hpp"
 #include "gameLogick/StartScreen.hpp"
+#include "gameLogick/GameScreen.hpp"
 
 void loadAllReferences() {
     AssetsManager::loadTexture(START_SCREEN_BACKGROUND);
-    AssetsManager::loadFont(MONTSERRAT_FONT);
+    AssetsManager::loadFont(BLAZMA_FONT);
+    AssetsManager::loadTexture(GAME_FIELD_BACKGROUND);
 }
 
-std::vector<Renderable*> GameScreens((int)Screens::size);
+std::vector<Screen*> GameScreens((int)Screens::size);
 
 int main() {
     sf::RenderWindow wnd(sf::VideoMode(), "Shop simulator", sf::Style::Fullscreen);
@@ -19,7 +21,9 @@ int main() {
     sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
     Screens screenState = Screens::start;
     StartScreen startScreen(wnd, screenState);
+    GameScreen gameScreen(wnd, screenState); 
     GameScreens[(int)Screens::start] = &startScreen;
+    GameScreens[(int)Screens::game] = &gameScreen;
     
     while (wnd.isOpen()) {
         sf::Event event;
@@ -27,8 +31,14 @@ int main() {
             // In depend of what screen now is renders
             // we render it and send it events
             GameScreens[(int)screenState]->render(event);
-            if (screenState != Screens::start) screenState = Screens::start;
+            if (screenState != Screens::start && screenState != Screens::game)
+                screenState = Screens::start;
             
+            // TODO::Controll function/class
+            if (event.type == sf::Event::KeyPressed)
+                if (event.key.code == sf::Keyboard::Escape)
+                    screenState = Screens::start;
+
             if (event.type == sf::Event::Closed)
                 wnd.close();
         }

@@ -10,7 +10,10 @@ enum class Screens : int {no_screen = -1, start, settings, load_save, game, size
 // Filenames
 // Textures
 #define START_SCREEN_BACKGROUND "./assets/images/Start_screen_bg.jpeg"
+#define GAME_FIELD_BACKGROUND   "./assets/images/shop.png"
+
 
 // Fonts
 #define MONTSERRAT_FONT "./assets/fonts/Montserrat.ttf"
 #define ROBOTO_BOLD_FONT     "./assets/fonts/Roboto-Bold.ttf"
+#define BLAZMA_FONT "./assets/fonts/Blazma-Regular.ttf"

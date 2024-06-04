@@ -1,6 +1,6 @@
 #include "gameLogick/StartScreen.hpp"
 
-StartScreen::StartScreen(sf::RenderWindow& wnd, Screens& screenState) : wnd(wnd), screenState(screenState) {
+StartScreen::StartScreen(sf::RenderWindow& wnd, Screens& screenState) : Screen(wnd, screenState) {
     sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
     background = sf::RectangleShape(wndSize);
     background.setTexture(&AssetsManager::loadTexture(START_SCREEN_BACKGROUND));
@@ -10,17 +10,17 @@ StartScreen::StartScreen(sf::RenderWindow& wnd, Screens& screenState) : wnd(wnd)
     outlineColor = sf::Color(255, 255, 255);// white
     
     btns.resize((int)Btns::size);
-    btns[(int)Btns::loadSave]    = createButton({250, 660}, "Load Game");
-    btns[(int)Btns::startGame]   = createButton({400, 400}, "Start new\nsimulation");
-    btns[(int)Btns::settings]    = createButton({400, 100}, "Settings");
-    btns[(int)Btns::exit]        = createButton({400, 100}, "Exit");
+    btns[(int)Btns::load     ] = createButton({250, 660}, "Continue");
+    btns[(int)Btns::startGame] = createButton({400, 400}, "Start new\nsimulation");
+    btns[(int)Btns::settings ] = createButton({400, 100}, "Settings");
+    btns[(int)Btns::exit     ] = createButton({400, 100}, "Exit");
     
     resize(wndSize);
 }
 
 Button StartScreen::createButton(sf::Vector2f size, std::string label) {
     Button btn(size, {0, 0}, btnBG);
-    btn.setLabel(AssetsManager::loadFont(ROBOTO_BOLD_FONT), label, sf::Color::White, 22, ALIGN_CENTER, sf::Text::Style::Regular);
+    btn.setLabel(AssetsManager::loadFont(BLAZMA_FONT), label, sf::Color::White, 24, ALIGN_CENTER, sf::Text::Style::Regular);
     btn.setOutline(outlineSize, outlineColor);
     return btn;
 }
@@ -37,10 +37,10 @@ void StartScreen::render(sf::Event& event) {
         break;
     case sf::Event::MouseButtonPressed:
         mouseCoord = {event.mouseButton.x, event.mouseButton.y};
-        if      (btns[(int)Btns::loadSave].isInBounds(mouseCoord))   { screenState = Screens::load_save; }
-        else if (btns[(int)Btns::settings].isInBounds(mouseCoord))   { screenState = Screens::settings; }
-        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord))  { screenState = Screens::game; }
-        else if (btns[(int)Btns::exit].isInBounds(mouseCoord))       { wnd.close(); }
+        if      (btns[(int)Btns::load     ].isInBounds(mouseCoord)) { screenState = Screens::game; }
+        else if (btns[(int)Btns::settings ].isInBounds(mouseCoord)) { screenState = Screens::settings; }
+        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game;  std::cout <<  "game screen\n"; }
+        else if (btns[(int)Btns::exit     ].isInBounds(mouseCoord)) { wnd.close(); }
         break;
     }
 }
@@ -65,8 +65,8 @@ void StartScreen::resize(sf::Vector2f& wndSize) {
     // TODO::Resize logick
     sf::Vector2f rightTopBound = {wndSize.x - btns[(int)Btns::startGame].getSize().x - 100.f, 100.f};
     static int spaceBeetwenBtns = 30;
-    btns[(int)Btns::loadSave].setPosition({
-        rightTopBound.x - btns[(int)Btns::loadSave].getSize().x - spaceBeetwenBtns,
+    btns[(int)Btns::load].setPosition({
+        rightTopBound.x - btns[(int)Btns::load].getSize().x - spaceBeetwenBtns,
         rightTopBound.y
         });
     btns[(int)Btns::startGame].setPosition(rightTopBound);

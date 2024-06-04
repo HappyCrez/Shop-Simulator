@@ -4,15 +4,13 @@
 */
 #pragma once
 #include "dep.hpp"
-#include "Renderable.hpp"
+#include "gameLogick/Screen.hpp"
 #include "loaders/AssetsManager.hpp"
 #include "UI/Button.hpp"
 
-enum class Btns {loadSave = 0, startGame, settings, exit, size};
+enum class Btns {load = 0, startGame, settings, exit, size};
 
-class StartScreen : public Renderable {    
-    sf::RenderWindow& wnd;
-    Screens& screenState;
+class StartScreen : public Screen {
     sf::RectangleShape background;
     std::vector<Button> btns;
     

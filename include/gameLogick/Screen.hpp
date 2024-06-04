@@ -5,8 +5,13 @@
 #pragma once
 #include "dep.hpp"
 
-class Renderable : public sf::Drawable {
+class Screen : public sf::Drawable {
 public:
+    Screen(sf::RenderWindow& wnd, Screens& screenState);
+
+    sf::RenderWindow& wnd;
+    Screens& screenState;
+
     virtual void render(sf::Event& event) = 0;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 };

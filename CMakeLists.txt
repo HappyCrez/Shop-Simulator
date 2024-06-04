@@ -9,8 +9,16 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 set(sources src/Launcher.cpp
+            
+            # File loaders
             src/loaders/AssetsManager.cpp
+            
+            # GameLogick
+            src/gameLogick/Screen.cpp
             src/gameLogick/StartScreen.cpp
+            src/gameLogick/GameScreen.cpp
+            
+            # User Interface
             src/UI/Button.cpp)
 
 add_executable("${PROJECT_NAME}" "${sources}")
