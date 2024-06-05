@@ -16,4 +16,5 @@ public:
     static AssetsManager& getInstance();
     static sf::Texture& loadTexture(std::string filename);
     static sf::Font& loadFont(std::string filename);
+    static std::string loadTextFile(std::string filename);
 };

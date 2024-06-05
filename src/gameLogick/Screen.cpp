@@ -1,3 +1,4 @@
 #include "gameLogick/Screen.hpp"
 
-Screen::Screen(sf::RenderWindow& wnd, Screens& screenState) : wnd(wnd), screenState(screenState) { }
+Screen::Screen(sf::RenderWindow& wnd, Screens& screenState) : wnd(wnd), screenState(screenState)
+{ }

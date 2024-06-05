@@ -6,12 +6,14 @@
 enum class Screens : int {no_screen = -1, start, settings, load, game, size};
 enum class Align {top_left, top_right, bottom_left, bottom_right, center};
 
+// Tiles types
+#define ZONES_MAP               "./assets/files/ZonesMap.txt"
+#define TILE_SIZE               32
 enum class Tiles {
-    obstacle = -2, buy, // special tiles
+    no_tile = -3, obstacle, buy, // special tiles
     tomato, potato, banana, lettuce, grape, eggplant, carrot, foodTilesSize // food tiles 
-    };
+};
 
-// Filenames
 // Textures
 #define START_SCREEN_BACKGROUND "./assets/images/Start_screen_bg.jpeg"
 #define GAME_FIELD_BACKGROUND   "./assets/images/Shop.png"

@@ -58,8 +58,9 @@ int main() {
         wnd.display();
 
         // Get delta time - time beetwen frames
-        // Update game screen
-        GameField::update(deltaClock.restart().asSeconds());
+        // Update game screen only when game is shows
+        if (screenState == Screens::game)
+            GameField::update(deltaClock.restart().asSeconds());
     }
     return 0;
 }

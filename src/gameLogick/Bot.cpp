@@ -22,6 +22,7 @@ void Bot::update(float dt) {
 
 // ordersCnt must be in bounds [0; foodTilesSize] 
 void Bot::fillOrderQueue(int ordersCnt) {
+    orders.push_back(Tiles::buy);
     int i = 0;
     while (i < ordersCnt) {
         Tiles random = (Tiles)(rand() % (int)Tiles::foodTilesSize);
@@ -30,5 +31,4 @@ void Bot::fillOrderQueue(int ordersCnt) {
         orders.push_back(random);
         i++;
     }
-    orders.push_back(Tiles::buy);
 }

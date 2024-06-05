@@ -20,3 +20,12 @@ sf::Font& AssetsManager::loadFont(std::string filename) {
     font.loadFromFile(filename);
     return fontMap[filename] = font;
 }
+
+std::string AssetsManager::loadTextFile(std::string filename) {
+    std::string text, line;
+    std::ifstream input(filename);
+    if (!input.is_open()) throw;
+    while (std::getline(input, line))
+        text.append(line);
+    return text;
+}

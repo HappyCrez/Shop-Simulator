@@ -5,9 +5,9 @@ App writes on C++ for mostly Linux operation system, but using the multioperatio
 
 
 # Instruments
-1. original SFML library
+1. original SFML library 2.6
 2. Cmake to build and compile
-
+3. Tiled app
 
 # Author
 1. Vladimir Gorbunov Altstu PI-2x
