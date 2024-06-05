@@ -3,8 +3,13 @@
 *   Most common enums, paths, etc.
 */
 
-enum class Screens : int {no_screen = -1, start, settings, load_save, game, size};
+enum class Screens : int {no_screen = -1, start, settings, load, game, size};
 enum class Align {top_left, top_right, bottom_left, bottom_right, center};
+
+enum class Tiles {
+    obstacle = -2, buy, // special tiles
+    tomato, potato, banana, lettuce, grape, eggplant, carrot, foodTilesSize // food tiles 
+    };
 
 // Filenames
 // Textures

@@ -7,6 +7,7 @@
 
 class Tile {
     int tileState;
+    sf::Vector2f position;
 
 public:
 

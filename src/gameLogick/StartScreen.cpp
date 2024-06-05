@@ -39,7 +39,7 @@ void StartScreen::render(sf::Event& event) {
         mouseCoord = {event.mouseButton.x, event.mouseButton.y};
         if      (btns[(int)Btns::load     ].isInBounds(mouseCoord)) { screenState = Screens::game; }
         else if (btns[(int)Btns::settings ].isInBounds(mouseCoord)) { screenState = Screens::settings; }
-        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game; }
+        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game; GameField::restart(); }
         else if (btns[(int)Btns::exit     ].isInBounds(mouseCoord)) { wnd.close(); }
         break;
     }

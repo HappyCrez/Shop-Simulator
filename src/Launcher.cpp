@@ -20,11 +20,14 @@ std::vector<Screen*> GameScreens((int)Screens::size);
 
 int main() {
     sf::RenderWindow wnd(sf::VideoMode(), "Shop simulator", sf::Style::Fullscreen);
+    sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
     wnd.setVerticalSyncEnabled(true);
     
     loadAllReferences();
 
-    sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
+    sf::Clock deltaClock;
+    srand(static_cast<unsigned int>(sf::Time().asMicroseconds()));  // set rand seed
+
     Screens screenState = Screens::start;
     StartScreen startScreen(wnd, screenState);
     GameScreen gameScreen(wnd, screenState); 
@@ -53,6 +56,10 @@ int main() {
         // It depends of what screen is now showing
         wnd.draw(*GameScreens[(int)screenState]);
         wnd.display();
+
+        // Get delta time - time beetwen frames
+        // Update game screen
+        GameField::update(deltaClock.restart().asSeconds());
     }
     return 0;
 }

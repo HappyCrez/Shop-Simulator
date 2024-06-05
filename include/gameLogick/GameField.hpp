@@ -5,14 +5,20 @@
 #pragma once
 #include "dep.hpp"
 #include "gameLogick/Screen.hpp"
-#include "loaders/AssetsManager.hpp"
+#include "gameLogick/Bot.hpp"
 #include "gameLogick/Tile.hpp"
+#include "loaders/AssetsManager.hpp"
 
 class GameField : public sf::Drawable {
     inline static sf::Sprite shopBG;
-    inline static std::vector<Tile> tiles;
+
+    inline static std::vector<Tile> buyTiles;
+    inline static std::vector<Tile> foodTiles;
+    inline static std::vector<Tile> obstackles;
+
+    inline static std::vector<Bot> bots;
     inline static sf::Vector2f botSpawnPos;
-    
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     
     GameField();
@@ -21,6 +27,7 @@ class GameField : public sf::Drawable {
 public:
     static GameField& getInstance();
 
-    static sf::Vector2f getBotSpawnPos();
+    static void update(float dt);
+    static void restart();
     static void setPosition(sf::Vector2f pos);
 };

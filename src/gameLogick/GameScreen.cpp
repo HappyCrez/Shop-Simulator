@@ -5,10 +5,8 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
     
     background = sf::RectangleShape(wndSize);
     background.setFillColor(sf::Color(39,39,39,1)); // dark gray
-
     
-    for (int i = 0; i < 1; i++)
-        bots.push_back(Bot(i % BOT_TEXTURES_CNT + 1));
+    // TODO::Control panel
 
     resize(wndSize);
 }
@@ -16,14 +14,14 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
 void GameScreen::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(background);
     target.draw(GameField::getInstance());
+    // TODO::Draw control panel
 }
 
 void GameScreen::render(sf::Event& event) {
-
+    // TODO::Action on control panel
 }
 
 void GameScreen::resize(sf::Vector2f wndSize) {
     GameField::setPosition({100.f, 100.f});
-    for (Bot &bot : bots)
-        bot.setPosition(GameField::getBotSpawnPos());
+    // TODO::Position of control panel
 }

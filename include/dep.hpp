@@ -8,5 +8,7 @@
 #include <map>
 #include <math.h>
 #include <vector>
+#include <queue>
+#include <random>
 
 #include "definitions.hpp"
