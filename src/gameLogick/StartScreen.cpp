@@ -20,7 +20,7 @@ StartScreen::StartScreen(sf::RenderWindow& wnd, Screens& screenState) : Screen(w
 
 Button StartScreen::createButton(sf::Vector2f size, std::string label) {
     Button btn(size, {0, 0}, btnBG);
-    btn.setLabel(AssetsManager::loadFont(BLAZMA_FONT), label, sf::Color::White, 24, ALIGN_CENTER, sf::Text::Style::Regular);
+    btn.setLabel(AssetsManager::loadFont(BLAZMA_FONT), label, sf::Color::White, 24, Align::center, sf::Text::Style::Regular);
     btn.setOutline(outlineSize, outlineColor);
     return btn;
 }
@@ -39,7 +39,7 @@ void StartScreen::render(sf::Event& event) {
         mouseCoord = {event.mouseButton.x, event.mouseButton.y};
         if      (btns[(int)Btns::load     ].isInBounds(mouseCoord)) { screenState = Screens::game; }
         else if (btns[(int)Btns::settings ].isInBounds(mouseCoord)) { screenState = Screens::settings; }
-        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game;  std::cout <<  "game screen\n"; }
+        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game; }
         else if (btns[(int)Btns::exit     ].isInBounds(mouseCoord)) { wnd.close(); }
         break;
     }

@@ -10,7 +10,7 @@ class Button : public sf::Drawable {
     sf::Vector2f size;
     sf::Vector2f pos;
     sf::Text label;
-    int align = ALIGN_TOP_LEFT;
+    Align align = Align::bottom_left;
 
     void updateLabelPos();
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -31,12 +31,12 @@ public:
     void setOutline(int size, sf::Color color);
     
     // Label
-    void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align, sf::Text::Style style);
+    void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, Align align, sf::Text::Style style);
     void setFont(sf::Font& font);
     void setLabelContent(std::string content);
     void setTextColor(sf::Color color);
     void setFontSize(int size);
-    void setAlign(int align);
+    void setAlign(Align align);
     void setStyle(sf::Text::Style style);
 
     sf::Vector2f getSize();

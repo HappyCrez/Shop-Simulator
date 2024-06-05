@@ -14,9 +14,14 @@ set(sources src/Launcher.cpp
             src/loaders/AssetsManager.cpp
             
             # GameLogick
+            # Screens
             src/gameLogick/Screen.cpp
             src/gameLogick/StartScreen.cpp
             src/gameLogick/GameScreen.cpp
+            # Logick
+            src/gameLogick/GameField.cpp
+            src/gameLogick/Bot.cpp
+            src/gameLogick/Tile.cpp
             
             # User Interface
             src/UI/Button.cpp)

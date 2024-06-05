@@ -10,6 +10,8 @@ class AssetsManager {
     std::map<std::string, sf::Font> fontFiles;
 
     AssetsManager() { /* Singleton */ }
+    AssetsManager( const AssetsManager& );  
+    AssetsManager& operator=( AssetsManager& );
 public:
     static AssetsManager& getInstance();
     static sf::Texture& loadTexture(std::string filename);

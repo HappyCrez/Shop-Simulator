@@ -6,7 +6,6 @@ Button::Button(sf::Vector2f size, sf::Vector2f pos) {
     rect = sf::RectangleShape();
     setSize(size);
     setPosition(pos);
-    this->align = align;
 }
 
 Button::Button(sf::Vector2f size, sf::Vector2f pos, sf::Color bgColor) : Button(size, pos) {
@@ -58,19 +57,19 @@ void Button::setOutline(int size, sf::Color color) {
 void Button::updateLabelPos() {
     sf::Vector2f pos;
     switch (align) {
-        case ALIGN_BOTTOM_LEFT:
+        case Align::bottom_left:
 
             break;
-        case ALIGN_BOTTOM_RIGHT:
+        case Align::bottom_right:
         
             break;
-        case ALIGN_TOP_LEFT:
+        case Align::top_left:
         
             break;
-        case ALIGN_TOP_RIGHT:
+        case Align::top_right:
         
             break;
-        case ALIGN_CENTER:
+        case Align::center:
             pos = rect.getPosition()+rect.getSize()/2.f;
             pos = {round(pos.x-label.getLocalBounds().width/2.f), round(pos.y-label.getLocalBounds().height/2.f-5)};
             break;
@@ -79,7 +78,7 @@ void Button::updateLabelPos() {
     label.setPosition(pos);
 }
 
-void Button::setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, int align, sf::Text::Style style) {
+void Button::setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, Align align, sf::Text::Style style) {
     label.setFont(font);
     label.setString(content);
     label.setCharacterSize(fontSize);
@@ -104,7 +103,7 @@ void Button::setFontSize(int fontSize) {
     updateLabelPos();
 }
 
-void Button::setAlign(int align) {
+void Button::setAlign(Align align) {
     this->align = align;
     updateLabelPos();
 }
