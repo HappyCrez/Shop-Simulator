@@ -19,7 +19,7 @@ enum class Tiles {
 #define START_SCREEN_BACKGROUND "./assets/images/Start_screen_bg.jpeg"
 #define GAME_FIELD_BACKGROUND   "./assets/images/Shop.png"
 
-enum class BotTurn {down, left, right, up};
+enum class BotTurn  {down, left, right, up};
 #define BOT_TEXTURE_MOVE_BASE   "./assets/images/Char_00"
 #define BOT_TEXTURE_IDLE_BASE   "./assets/images/Char_idle_00"
 #define BOT_FRAME_COLS          4
@@ -27,6 +27,7 @@ enum class BotTurn {down, left, right, up};
 #define BOT_TEXTURES_CNT        1
 #define BOT_SIZE                72
 #define BOT_WAIT_BAR_HEIGHT     4.f
+#define BOT_MIN_SPEED           6
 #define TARGET_OFFSET           5
 
 

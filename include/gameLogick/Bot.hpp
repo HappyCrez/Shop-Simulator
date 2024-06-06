@@ -12,6 +12,11 @@ class Bot : public sf::Drawable {
     float waitSpeed;
     int textureNum;
 
+    bool lastStateMove = false;
+    BotTurn turn = BotTurn::up;
+    float frameTime = 0.f;
+    float timeOnTarget = 0.f;
+
     const float frameSpeed = 6.f;
     sf::Sprite sprite;
     sf::RectangleShape waitBar;

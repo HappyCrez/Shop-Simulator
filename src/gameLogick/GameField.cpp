@@ -77,8 +77,8 @@ void GameField::update(float dt) {
 
 void GameField::restart() {
     bots.clear();
-    for (int i = 0; i < 1; i++) {
-        int botSpeed = 70;
+    for (int i = 0; i < 2; i++) {
+        int botSpeed = BOT_MIN_SPEED + rand() % 2;
         // 1 <= orders <= zones::foodTilesSize
         int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1;
         bots.push_back(Bot(botSpawnPos, i % BOT_TEXTURES_CNT + 1, ordersCnt, botSpeed));
