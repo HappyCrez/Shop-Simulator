@@ -49,7 +49,8 @@ void GameField::createTiles() {
 
 void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(shopBG);
-
+    for (int i = 0; i < bots.size(); i++)
+        target.draw(bots[i]);
     /*
         ==   DEBUG   ==
     for (Tile &tile : buyTiles)
@@ -63,7 +64,7 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     
 void GameField::setPosition(sf::Vector2f pos) {
     shopBG.setPosition(pos);
-    botSpawnPos = {pos.x + shopBG.getLocalBounds().width/2.f + BOT_WIDTH/2, pos.y + shopBG.getLocalBounds().height + BOT_HEIGHT};
+    botSpawnPos = {pos.x + shopBG.getLocalBounds().width/2.f + BOT_SIZE/2, pos.y + shopBG.getLocalBounds().height + BOT_SIZE};
     
     for (Tile &tile : buyTiles)
         tile.setPosition(tile.getPosition()+pos-originalPos);
@@ -76,14 +77,15 @@ void GameField::setPosition(sf::Vector2f pos) {
 
 void GameField::update(float dt) {
     for (int i = 0; i < bots.size(); i++)
-        bots[i].update(dt);
+        bots[i].update(dt, buyTiles, foodTiles, obstackles);
 }
 
 void GameField::restart() {
     bots.clear();
     for (int i = 0; i < 1; i++) {
+        int botSpeed = 70;
         // 1 <= orders <= zones::foodTilesSize
         int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1;
-        bots.push_back(Bot(i % BOT_TEXTURES_CNT + 1, ordersCnt));
+        bots.push_back(Bot(botSpawnPos, i % BOT_TEXTURES_CNT + 1, ordersCnt, botSpeed));
     }
 }

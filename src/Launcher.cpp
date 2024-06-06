@@ -9,7 +9,7 @@ void loadAllReferences() {
     AssetsManager::loadFont(BLAZMA_FONT);
     AssetsManager::loadTexture(GAME_FIELD_BACKGROUND);
     for (int textureNum = 1; textureNum <= BOT_TEXTURES_CNT; textureNum++)
-        AssetsManager::loadTexture(BOT_TEXTURE_BASE + std::to_string(textureNum) + ".png");
+        AssetsManager::loadTexture(BOT_TEXTURE_MOVE_BASE + std::to_string(textureNum) + ".png");
 
     // Singleton with deffered initialization,
     // so first configuration should be in launcher
@@ -26,7 +26,7 @@ int main() {
     loadAllReferences();
 
     sf::Clock deltaClock;
-    srand(static_cast<unsigned int>(sf::Time().asMicroseconds()));  // set rand seed
+    srand(static_cast<unsigned int>(sf::Time().asMilliseconds()));  // set rand seed
 
     Screens screenState = Screens::start;
     StartScreen startScreen(wnd, screenState);

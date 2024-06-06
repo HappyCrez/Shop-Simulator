@@ -5,6 +5,7 @@ Tile::Tile(Tiles type) : Tile (type, {0, 0}) { }
 Tile::Tile(Tiles type, sf::Vector2f pos) {
     rect.setPosition(pos);
     rect.setSize({TILE_SIZE, TILE_SIZE});
+    tileType = type;
     switch(type) {
      case Tiles::no_tile:
         break;
@@ -26,6 +27,10 @@ void Tile::setPosition(sf::Vector2f pos) {
 
 sf::Vector2f Tile::getPosition() {
     return rect.getPosition();
+}
+
+Tiles Tile::getType() {
+    return tileType;
 }
 
 void Tile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
