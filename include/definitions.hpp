@@ -11,7 +11,7 @@ enum class Align {top_left, top_right, bottom_left, bottom_right, center};
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"
 #define TILE_SIZE               32
 enum class Tiles {
-    no_tile = -3, obstacle, buy, // special tiles
+    no_tile = -4, obstacle, spawn, buy, // special tiles
     lettuce, carrot, tomato, eggplant, potato, grape, banana, foodTilesSize // food tiles 
 };
 
@@ -24,7 +24,7 @@ enum class BotTurn  {down, left, right, up};
 #define BOT_TEXTURE_IDLE_BASE   "./assets/images/Char_idle_00"
 #define BOT_FRAME_COLS          4
 #define BOT_FRAME_ROWS          4
-#define BOT_TEXTURES_CNT        1
+#define BOT_TEXTURES_CNT        6
 #define BOT_SIZE                72
 #define BOT_WAIT_BAR_HEIGHT     4.f
 #define BOT_MIN_SPEED           6

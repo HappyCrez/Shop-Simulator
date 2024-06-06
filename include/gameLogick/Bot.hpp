@@ -12,12 +12,13 @@ class Bot : public sf::Drawable {
     float waitSpeed;
     int textureNum;
 
+    bool Die = false;
     bool lastStateMove = false;
     BotTurn turn = BotTurn::up;
     float frameTime = 0.f;
     float timeOnTarget = 0.f;
 
-    const float frameSpeed = 6.f;
+    float frameSpeed = 6.f;
     sf::Sprite sprite;
     sf::RectangleShape waitBar;
 
@@ -33,11 +34,12 @@ public:
     
     void update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
     void fillOrderQueue(int ordersCnt);
-    void onTheDestProceed(float dt);
-    void moveToTarget(float dt, sf::Vector2f& target);
-
+    
+    void onTheDestProceed(float dt, Tiles purpose);
+    void moveToTarget(float dt, sf::Vector2f& target, Tiles purpose);
+    sf::Vector2f getTarget(Tiles tile, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
 
     void setPosition(sf::Vector2f pos);
     
-    sf::Vector2f getTarget(Tiles tile, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
+    bool isDied();
 };

@@ -36,6 +36,8 @@ void GameField::createTiles() {
             case Tiles::obstacle:
                 obstackles.push_back(tile);
                 break;
+            case Tiles::spawn: // copy in two vectors (spawnTiles, actionTiles)
+                spawnTiles.push_back(tile);
             default: // food and buy tiles
                 actionTiles.push_back(tile);
                 break;
@@ -57,11 +59,38 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     for (Tile &tile : obstackles)
         target.draw(tile);
     */
+}    
+
+void GameField::update(float dt) {
+    static float spawnTime = 0.f;
+    spawnTime += dt;
+    if (spawnTime > botSpawnTime) {
+        spawnTime = 0.f;
+        spawnBot();
+    }
+    for (int i = 0; i < bots.size(); i++) {
+        bots[i].update(dt, actionTiles, obstackles);
+        if (bots[i].isDied()) {
+            bots.erase(bots.begin() + i);
+            i--;
+        }
+    }
 }
-    
+
+void GameField::restart() {
+    bots.clear();
+}
+
+void GameField::spawnBot() {
+    int botSpeed = BOT_MIN_SPEED + rand() % 2;
+    int botSkin = rand()%BOT_TEXTURES_CNT + 1;
+    int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
+    sf::Vector2f botSpawnPos = spawnTiles[rand()%spawnTiles.size()].getPosition();
+    bots.push_back(Bot(botSpawnPos, botSkin, ordersCnt, botSpeed));
+}
+
 void GameField::setPosition(sf::Vector2f pos) {
     shopBG.setPosition(pos);
-    botSpawnPos = {pos.x + shopBG.getLocalBounds().width/2.f + BOT_SIZE/2, pos.y + shopBG.getLocalBounds().height + BOT_SIZE};
     
     for (Tile &tile : actionTiles)
         tile.setPosition(tile.getPosition()+pos-originalPos);
@@ -70,17 +99,6 @@ void GameField::setPosition(sf::Vector2f pos) {
     originalPos = pos;
 }
 
-void GameField::update(float dt) {
-    for (int i = 0; i < bots.size(); i++)
-        bots[i].update(dt, actionTiles, obstackles);
-}
-
-void GameField::restart() {
-    bots.clear();
-    for (int i = 0; i < 2; i++) {
-        int botSpeed = BOT_MIN_SPEED + rand() % 2;
-        // 1 <= orders <= zones::foodTilesSize
-        int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1;
-        bots.push_back(Bot(botSpawnPos, i % BOT_TEXTURES_CNT + 1, ordersCnt, botSpeed));
-    }
+void GameField::setBotSpawnTime(float time) {
+    botSpawnTime = time;
 }

@@ -16,6 +16,7 @@ Bot::Bot(sf::Vector2f pos, int textureNum, int ordersCnt, float movementSpeed) {
 // ordersCnt must be in bounds [0; foodTilesSize] 
 void Bot::fillOrderQueue(int ordersCnt) {
     orders.clear();
+    orders.push_back(Tiles::spawn);
     orders.push_back(Tiles::buy);
     int i = 0;
     while (i < ordersCnt) {
@@ -39,11 +40,11 @@ void Bot::setPosition(sf::Vector2f pos) {
 
 void Bot::update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
     sf::Vector2f target = getTarget(orders.back(), actionTiles, obstackles);
-    moveToTarget(dt, target);
+    moveToTarget(dt, target, orders.back());
     waitBar.setPosition(sprite.getPosition()); // update bar position
 }
 
-void Bot::moveToTarget(float dt, sf::Vector2f& target) {
+void Bot::moveToTarget(float dt, sf::Vector2f& target, Tiles purpose) {
     frameTime += dt * frameSpeed;
     if (int(frameTime) >= BOT_FRAME_COLS) frameTime = 0;
 
@@ -68,7 +69,7 @@ void Bot::moveToTarget(float dt, sf::Vector2f& target) {
     }
     else { // Idle
         isMove = false;
-        onTheDestProceed(dt);
+        onTheDestProceed(dt, purpose);
     }
     
     // Optimization, change texture only when move state change
@@ -83,7 +84,6 @@ void Bot::moveToTarget(float dt, sf::Vector2f& target) {
 
 sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
     if (ordersInfo.find(purpose) != ordersInfo.end()) return ordersInfo[purpose];
-
     sf::Vector2f target = {0, 0};
 
     // find neareast purpose tile
@@ -99,16 +99,32 @@ sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& actionTiles, std::
     return ordersInfo[purpose] = target;
 }
 
-void Bot::onTheDestProceed(float dt) {
-    if (timeOnTarget < BOT_SIZE) {
-        timeOnTarget += dt * waitSpeed;
-    } else {
+void Bot::onTheDestProceed(float dt, Tiles purpose) {
+    timeOnTarget += dt * waitSpeed;
+    if (purpose == Tiles::spawn) {
+        Die = true;
+        return;
+    }
+
+    if (timeOnTarget >= BOT_SIZE) {
         timeOnTarget = 0.f;
         orders.pop_back();
+        switch (purpose) {
+        case Tiles::buy:
+            // TODO::Count income
+            break;
+        default:
+            // TODO::Cases every food different costs
+            break;
+        }
     }
     waitBar.setSize({timeOnTarget, BOT_WAIT_BAR_HEIGHT});
 }
 
 int Bot::vecLen(sf::Vector2f vec) {
     return std::hypot(vec.x, vec.y);
+}
+
+bool Bot::isDied() {
+    return Die;
 }
