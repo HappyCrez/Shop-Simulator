@@ -12,8 +12,8 @@
 class GameField : public sf::Drawable {
     inline static sf::Sprite shopBG;
 
-    inline static std::vector<Tile> buyTiles;
-    inline static std::vector<Tile> foodTiles;
+    // buy and food tiles
+    inline static std::vector<Tile> actionTiles;
     inline static std::vector<Tile> obstackles;
 
     inline static std::vector<Bot> bots;

@@ -36,11 +36,8 @@ void GameField::createTiles() {
             case Tiles::obstacle:
                 obstackles.push_back(tile);
                 break;
-            case Tiles::buy:
-                buyTiles.push_back(tile);
-                break;
-            default: // food tiles
-                foodTiles.push_back(tile);
+            default: // food and buy tiles
+                actionTiles.push_back(tile);
                 break;
             }
         }
@@ -66,9 +63,7 @@ void GameField::setPosition(sf::Vector2f pos) {
     shopBG.setPosition(pos);
     botSpawnPos = {pos.x + shopBG.getLocalBounds().width/2.f + BOT_SIZE/2, pos.y + shopBG.getLocalBounds().height + BOT_SIZE};
     
-    for (Tile &tile : buyTiles)
-        tile.setPosition(tile.getPosition()+pos-originalPos);
-    for (Tile &tile : foodTiles)
+    for (Tile &tile : actionTiles)
         tile.setPosition(tile.getPosition()+pos-originalPos);
     for (Tile &tile : obstackles)
         tile.setPosition(tile.getPosition()+pos-originalPos);
@@ -77,7 +72,7 @@ void GameField::setPosition(sf::Vector2f pos) {
 
 void GameField::update(float dt) {
     for (int i = 0; i < bots.size(); i++)
-        bots[i].update(dt, buyTiles, foodTiles, obstackles);
+        bots[i].update(dt, actionTiles, obstackles);
 }
 
 void GameField::restart() {

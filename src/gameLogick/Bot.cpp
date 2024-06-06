@@ -37,8 +37,8 @@ void Bot::setPosition(sf::Vector2f pos) {
     waitBar.setPosition(pos);
 }
 
-void Bot::update(float dt, std::vector<Tile>& buyTiles, std::vector<Tile>& foodTiles, std::vector<Tile>& obstackles) {
-    sf::Vector2f target = getTarget(orders.back(), buyTiles, foodTiles, obstackles);
+void Bot::update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
+    sf::Vector2f target = getTarget(orders.back(), actionTiles, obstackles);
     moveToTarget(dt, target);
     waitBar.setPosition(sprite.getPosition()); // update bar position
 }
@@ -84,14 +84,14 @@ void Bot::moveToTarget(float dt, sf::Vector2f& target) {
     sprite.setTextureRect(sf::IntRect(col, (int)turn * BOT_SIZE, BOT_SIZE, BOT_SIZE));
 }
 
-sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& buyTiles, std::vector<Tile>& foodTiles, std::vector<Tile>& obstackles) {
+sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
     if (ordersInfo.find(purpose) != ordersInfo.end()) return ordersInfo[purpose];
 
     sf::Vector2f target = {0, 0};
 
-    if (purpose == Tiles::buy) return buyTiles[0].getPosition();
+    // find neareast purpose tile
     int dist = INT_MAX;
-    for (Tile &i : foodTiles) {
+    for (Tile &i : actionTiles) {
         if (i.getType() != purpose) continue;
         int currDist = vecLen(sprite.getPosition()-i.getPosition());
         if (dist > currDist) {

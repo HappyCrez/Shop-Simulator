@@ -26,7 +26,7 @@ public:
     Bot(int textureNum, int ordersCnt, float movementSpeed);
     Bot(sf::Vector2f pos, int textureNum, int ordersCnt, float movementSpeed);
     
-    void update(float dt, std::vector<Tile>& buyTiles, std::vector<Tile>& foodTiles, std::vector<Tile>& obstackles);
+    void update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
     void fillOrderQueue(int ordersCnt);
     void onTheDestProceed(float dt);
     void moveToTarget(float dt, sf::Vector2f& target);
@@ -34,5 +34,5 @@ public:
 
     void setPosition(sf::Vector2f pos);
     
-    sf::Vector2f getTarget(Tiles tile, std::vector<Tile>& buyTiles, std::vector<Tile>& foodTiles, std::vector<Tile>& obstackles);
+    sf::Vector2f getTarget(Tiles tile, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
 };
