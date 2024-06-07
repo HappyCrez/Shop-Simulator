@@ -26,7 +26,6 @@ class Bot : public sf::Drawable {
     
     std::map<Tiles, sf::Vector2f> ordersInfo;
     std::vector<Tiles> orders;
-    int vecLen(sf::Vector2f vec);
 
 public:
     Bot(int textureNum, int ordersCnt, float movementSpeed);

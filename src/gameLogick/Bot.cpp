@@ -90,7 +90,8 @@ sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& actionTiles, std::
     int dist = INT_MAX;
     for (Tile &i : actionTiles) {
         if (i.getType() != purpose) continue;
-        int currDist = vecLen(sprite.getPosition()-i.getPosition());
+        sf::Vector2f currVec = sprite.getPosition()-i.getPosition();
+        int currDist = static_cast<int>(std::hypot(currVec.x, currVec.y));
         if (dist > currDist) {
             dist = currDist;
             target = i.getPosition() - sf::Vector2f(0, TILE_SIZE);
@@ -119,10 +120,6 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
         }
     }
     waitBar.setSize({timeOnTarget, BOT_WAIT_BAR_HEIGHT});
-}
-
-int Bot::vecLen(sf::Vector2f vec) {
-    return std::hypot(vec.x, vec.y);
 }
 
 bool Bot::isDied() {
