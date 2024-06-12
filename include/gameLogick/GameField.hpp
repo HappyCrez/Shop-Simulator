@@ -13,12 +13,10 @@ class GameField : public sf::Drawable {
     inline static sf::Sprite shopBG;
 
     // buy and food tiles
-    inline static std::vector<Tile> actionTiles;
+    inline static std::vector<std::vector<Tile>> grid = std::vector(WORLD_HEIGHT, std::vector<Tile>(WORLD_WIDTH));
     inline static std::vector<Tile> spawnTiles;
-    inline static std::vector<Tile> obstackles;
 
     inline static std::vector<Bot> bots;
-    inline static sf::Vector2f originalPos;
     
     inline static float botSpawnTime = 10.f;
 
@@ -36,6 +34,5 @@ public:
     static void update(float dt);
     static void restart();
     
-    static void setPosition(sf::Vector2f pos);
     static void setBotSpawnTime(float time);
 };

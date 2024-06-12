@@ -2,9 +2,7 @@
 
 GameField::GameField() {
     shopBG.setTexture(AssetsManager::loadTexture(GAME_FIELD_BACKGROUND));
-    originalPos = {0, 0};
-    setPosition(originalPos);
-
+    shopBG.setPosition(WORLD_X, WORLD_Y);
     createTiles();
 }
 
@@ -23,42 +21,33 @@ void GameField::createTiles() {
     for (int i = 0; i < rowCnt; i++) {
         for (int j = 0; j < colCnt; j++) {
             zonesMap.erase(zonesMap.begin(), std::find(zonesMap.begin(), zonesMap.end(), ',') + 1);
-            tileType = atoi(zonesMap.data()) + (int)Tiles::no_tile;
+            tileType = atoi(zonesMap.data()) + (int)Tiles::no_tile; // some tiles are special
 
             Tile tile((Tiles)tileType, {
-                static_cast<float>(j * TILE_SIZE),
-                static_cast<float>(i * TILE_SIZE)
-                });
+                static_cast<float>(j * TILE_SIZE) + WORLD_X,  // Position on the screen 
+                static_cast<float>(i * TILE_SIZE) + WORLD_Y}  //
+                );
             switch ((Tiles)tileType) {
             // proceed special tiles
-            case Tiles::no_tile:
-                break;
-            case Tiles::obstacle:
-                obstackles.push_back(tile);
-                break;
-            case Tiles::spawn: // copy in two vectors (spawnTiles, actionTiles)
+            case Tiles::spawn: // copy in two vectors
                 spawnTiles.push_back(tile);
-            default: // food and buy tiles
-                actionTiles.push_back(tile);
                 break;
             }
+            grid[i][j] = tile;
         }
     }
 }
 
 void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(shopBG);
+    /*  =====DEBUG======
+        TODO::Delete
+    for (std::vector<Tile> &vec : grid)
+        for (Tile &tile : vec)
+            target.draw(tile);
+    */
     for (int i = 0; i < bots.size(); i++)
         target.draw(bots[i]);
-    /*
-        ==   DEBUG   ==
-    for (Tile &tile : buyTiles)
-        target.draw(tile);
-    for (Tile &tile : foodTiles)
-        target.draw(tile);
-    for (Tile &tile : obstackles)
-        target.draw(tile);
-    */
 }    
 
 void GameField::update(float dt) {
@@ -69,7 +58,7 @@ void GameField::update(float dt) {
         spawnBot();
     }
     for (int i = 0; i < bots.size(); i++) {
-        bots[i].update(dt, actionTiles, obstackles);
+        bots[i].update(dt, grid);
         if (bots[i].isDied()) {
             bots.erase(bots.begin() + i);
             i--;
@@ -79,24 +68,15 @@ void GameField::update(float dt) {
 
 void GameField::restart() {
     bots.clear();
+    spawnBot();
 }
 
 void GameField::spawnBot() {
     int botSpeed = BOT_MIN_SPEED + rand() % 2;
     int botSkin = rand()%BOT_TEXTURES_CNT + 1;
     int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
-    sf::Vector2f botSpawnPos = spawnTiles[rand()%spawnTiles.size()].getPosition();
+    sf::Vector2i botSpawnPos = Tile::getGridPosition(spawnTiles[rand()%spawnTiles.size()].getPosition());
     bots.push_back(Bot(botSpawnPos, botSkin, ordersCnt, botSpeed));
-}
-
-void GameField::setPosition(sf::Vector2f pos) {
-    shopBG.setPosition(pos);
-    
-    for (Tile &tile : actionTiles)
-        tile.setPosition(tile.getPosition()+pos-originalPos);
-    for (Tile &tile : obstackles)
-        tile.setPosition(tile.getPosition()+pos-originalPos);
-    originalPos = pos;
 }
 
 void GameField::setBotSpawnTime(float time) {

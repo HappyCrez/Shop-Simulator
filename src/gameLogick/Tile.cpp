@@ -1,13 +1,12 @@
 #include "gameLogick/Tile.hpp"
 
-Tile::Tile(Tiles type) : Tile (type, {0, 0}) { }
-
 Tile::Tile(Tiles type, sf::Vector2f pos) {
     rect.setPosition(pos);
     rect.setSize({TILE_SIZE, TILE_SIZE});
     tileType = type;
     switch(type) {
      case Tiles::no_tile:
+        rect.setFillColor(sf::Color::White);
         break;
     case Tiles::obstacle:
         rect.setFillColor(sf::Color::Red);
@@ -36,4 +35,11 @@ Tiles Tile::getType() {
 void Tile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(rect);
 }
-    
+
+sf::Vector2f Tile::getScreenPosition(sf::Vector2i gridPosition) {
+    return sf::Vector2f(gridPosition * TILE_SIZE) + sf::Vector2f(WORLD_X, WORLD_Y); 
+}
+
+sf::Vector2i Tile::getGridPosition(sf::Vector2f screenPosition) {
+    return sf::Vector2i(screenPosition - sf::Vector2f(WORLD_X, WORLD_Y)) / TILE_SIZE;
+}

@@ -12,31 +12,35 @@ class Bot : public sf::Drawable {
     float waitSpeed;
     int textureNum;
 
-    bool Die = false;
+    bool isDie = false;
     bool lastStateMove = false;
     BotTurn turn = BotTurn::up;
     float frameTime = 0.f;
     float timeOnTarget = 0.f;
-
     float frameSpeed = 6.f;
+    
+    sf::RectangleShape rect;
     sf::Sprite sprite;
+    sf::Vector2i posInGrid;
+    sf::Vector2f posOnScreen;
     sf::RectangleShape waitBar;
+    std::vector<Tiles> orders;
+    std::vector<sf::Vector2i> path;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void fillOrderQueue(int ordersCnt);
     
-    std::map<Tiles, sf::Vector2f> ordersInfo;
-    std::vector<Tiles> orders;
+    sf::Vector2i getNextTarget(std::vector<std::vector<Tile>>& grid, Tiles& purpose);
+    void generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Tile>>& grid, Tiles& purpose);
+    void moveToTarget(float dt, sf::Vector2i& target, std::vector<std::vector<Tile>>& grid);
+    void onTheDestProceed(float dt, Tiles purpose);
+    void moveDirection(BotTurn turn, float dt);
 
 public:
     Bot(int textureNum, int ordersCnt, float movementSpeed);
-    Bot(sf::Vector2f pos, int textureNum, int ordersCnt, float movementSpeed);
+    Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed);
     
-    void update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
-    void fillOrderQueue(int ordersCnt);
-    
-    void onTheDestProceed(float dt, Tiles purpose);
-    void moveToTarget(float dt, sf::Vector2f& target, Tiles purpose);
-    sf::Vector2f getTarget(Tiles tile, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles);
+    void update(float dt, std::vector<std::vector<Tile>>& grid);
 
     void setPosition(sf::Vector2f pos);
     

@@ -2,20 +2,21 @@
 
 Bot::Bot(int textureNum, int ordersCnt, float movementSpeed) : Bot({0, 0}, textureNum, ordersCnt, movementSpeed) { }
 
-Bot::Bot(sf::Vector2f pos, int textureNum, int ordersCnt, float movementSpeed) {
+Bot::Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed) {
     this->movementSpeed = movementSpeed*10;
-    this->waitSpeed = 5;
+    this->waitSpeed = 10;
     this->textureNum = textureNum;
-
-    sprite.setPosition(pos);
-    fillOrderQueue(ordersCnt);
-
+    sprite.setPosition(Tile::getScreenPosition(pos) - sf::Vector2f(0, BOT_SIZE));
+    posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/2.f);
+    posInGrid = pos;
+    
     waitBar.setFillColor(sf::Color::Green);
+    
+    fillOrderQueue(ordersCnt);
 }
 
 // ordersCnt must be in bounds [0; foodTilesSize] 
 void Bot::fillOrderQueue(int ordersCnt) {
-    orders.clear();
     orders.push_back(Tiles::spawn);
     orders.push_back(Tiles::buy);
     int i = 0;
@@ -31,85 +32,191 @@ void Bot::fillOrderQueue(int ordersCnt) {
 void Bot::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(sprite);
     target.draw(waitBar);
+    target.draw(rect);
 }
 
-void Bot::setPosition(sf::Vector2f pos) {
-    sprite.setPosition(pos);
-    waitBar.setPosition(pos);
-}
+void Bot::update(float dt, std::vector<std::vector<Tile>>& grid) {
+    if (isDie) return; // Don't update died bots
 
-void Bot::update(float dt, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
-    sf::Vector2f target = getTarget(orders.back(), actionTiles, obstackles);
-    moveToTarget(dt, target, orders.back());
+    posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/4.f*3.f);
+    posInGrid = (sf::Vector2i(posOnScreen) - sf::Vector2i(WORLD_X, WORLD_Y)) / TILE_SIZE;
+
+
+    sf::Vector2i target = getNextTarget(grid, orders.back());
+    moveToTarget(dt, target, grid);
     waitBar.setPosition(sprite.getPosition()); // update bar position
 }
 
-void Bot::moveToTarget(float dt, sf::Vector2f& target, Tiles purpose) {
+// Get next coords of tile in path
+sf::Vector2i Bot::getNextTarget(std::vector<std::vector<Tile>>& grid, Tiles& purpose) {
+    if (!path.empty()) return path.back();
+    
+    // find neareast purpose tile
+    sf::Vector2i target;
+    int dist = INT_MAX;
+    for (int i = 0; i < WORLD_HEIGHT; i++) {
+        for (int j = 0; j < WORLD_WIDTH; j++) {
+            if (grid[i][j].getType() != purpose) continue;
+
+            sf::Vector2f curVec = sprite.getPosition()-grid[i][j].getPosition();
+            int currDist = static_cast<int>(std::hypot(curVec.x, curVec.y));
+            if (dist > currDist) {
+                dist = currDist;
+                target = {j, i};
+            }
+        }
+    }
+    generatePathToTarget(target, grid, orders.back());
+    return path.back();
+}
+
+void Bot::generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Tile>>& grid, Tiles& purpose) {
+    std::queue<sf::Vector2i> q;
+    std::vector<std::vector<sf::Vector2i>> prev(WORLD_HEIGHT, std::vector(WORLD_WIDTH, sf::Vector2i(-1, -1)));
+    int dx[4] = { -1, 0, 1, 0 };
+    int dy[4] = { 0, 1, 0, -1 };
+    
+    q.push(posInGrid);
+    while (!q.empty()) {
+        sf::Vector2i curPos = q.front();
+        q.pop();
+
+        for (int i = 0; i < 4; i++) {
+            int col = curPos.x + dx[i];
+            int row = curPos.y + dy[i];
+
+            if (col <= 0 || col >= WORLD_WIDTH  ||
+                row <= 0 || row >= WORLD_HEIGHT ||
+                (prev[row][col].x != -1 && prev[row][col].y != -1) ||
+                (grid[row][col].getType() != Tiles::no_tile && grid[row][col].getType() != purpose))
+                { continue; }
+
+            prev[row][col] = curPos;
+            q.push({col,row});
+        }
+    }
+
+    path.clear();
+    sf::Vector2i cur = target;
+    prev[posInGrid.y][posInGrid.x] = {-1, -1};
+    
+    path.push_back(cur);
+    while (prev[cur.y][cur.x] != sf::Vector2i(-1, -1)) {
+        cur = prev[cur.y][cur.x];
+        path.push_back(cur);
+    }
+    path.pop_back();
+    
+    /*  =====DEBUG=======
+    *   TODO::Delete
+    for (int i = 0; i < WORLD_HEIGHT; i++) {
+        for (int j = 0; j < WORLD_WIDTH; j++) {
+            bool isPath = false;
+            for (sf::Vector2i &point : path)
+                if (point.x == j && point.y == i) {
+                    isPath = true;
+                    break;
+                }
+            if (isPath) std::cout << "+";
+            else std::cout << (int)grid[i][j].getType() - (int)Tiles::no_tile; 
+            std::cout << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << target.x << " " << target.y << "\n";
+    */
+}
+
+void Bot::moveToTarget(float dt, sf::Vector2i& target, std::vector<std::vector<Tile>>& grid) {
     frameTime += dt * frameSpeed;
     if (int(frameTime) >= BOT_FRAME_COLS) frameTime = 0;
 
     bool isMove = true;
     int col = int(frameTime) * BOT_SIZE;
 
-    if (sprite.getPosition().y + BOT_SIZE/2 < target.y - TARGET_OFFSET) {
-        sprite.move(sf::Vector2f(0.f, 1.f) * movementSpeed * dt);
+    /*  =====DEBUG=======
+    *   TODO::Delete
+    std::cout << "\x1B[2J\x1B[H";
+    for (int i = 0; i < WORLD_HEIGHT; i++) {
+        for (int j = 0; j < WORLD_WIDTH; j++) {
+            if (i == posInGrid.y && j == posInGrid.x) std::cout << "#" << " ";
+            else std::cout << (int)grid[i][j].getType() - (int)Tiles::no_tile << " ";
+        }
+        std::cout << "\n";
+    }
+    */
+    sf::Vector2f targetPos = Tile::getScreenPosition(target) + sf::Vector2f(TILE_SIZE/2.f, TILE_SIZE/2.f);
+
+    if (posOnScreen.y < targetPos.y - TARGET_OFFSET) {
         turn = BotTurn::down;
+        moveDirection(turn, dt);
     }
-    else if (sprite.getPosition().y > target.y + TARGET_OFFSET) {
-        sprite.move(sf::Vector2f(0.f, -1.f) * movementSpeed * dt);
+    else if (posOnScreen.y > targetPos.y + TARGET_OFFSET) {
         turn = BotTurn::up;
+        moveDirection(turn, dt);
     }
-    else if (sprite.getPosition().x + BOT_SIZE/2 < target.x - TARGET_OFFSET) {
-        sprite.move(sf::Vector2f(1.f, 0.f) * movementSpeed * dt);
+    else if (posOnScreen.x < targetPos.x - TARGET_OFFSET) {
         turn = BotTurn::right;
+        moveDirection(turn, dt);
     }
-    else if (sprite.getPosition().x > target.x + TARGET_OFFSET) {
-        sprite.move(sf::Vector2f(-1.f, 0.f) * movementSpeed * dt);
+    else if (posOnScreen.x > targetPos.x + TARGET_OFFSET) {
         turn = BotTurn::left;
+        moveDirection(turn, dt);
     }
-    else { // Idle
-        isMove = false;
-        onTheDestProceed(dt, purpose);
+    else {
+        // Path point
+        if (grid[posInGrid.y][posInGrid.x].getType() == Tiles::no_tile)
+        {   path.pop_back(); }
+        else  { // Idle
+            isMove = false;
+            onTheDestProceed(dt, grid[posInGrid.y][posInGrid.x].getType());
+        }
     }
     
-    // Optimization, change texture only when move state change
+    // Change texture only when move state change
     if (lastStateMove != isMove){
         if (isMove) sprite.setTexture(AssetsManager::loadTexture(BOT_TEXTURE_MOVE_BASE + std::to_string(textureNum) + ".png"));
         else sprite.setTexture(AssetsManager::loadTexture(BOT_TEXTURE_IDLE_BASE + std::to_string(textureNum) + ".png"));
         lastStateMove = isMove;    
     }
-    
     sprite.setTextureRect(sf::IntRect(col, (int)turn * BOT_SIZE, BOT_SIZE, BOT_SIZE));
 }
 
-sf::Vector2f Bot::getTarget(Tiles purpose, std::vector<Tile>& actionTiles, std::vector<Tile>& obstackles) {
-    if (ordersInfo.find(purpose) != ordersInfo.end()) return ordersInfo[purpose];
-    sf::Vector2f target = {0, 0};
-
-    // find neareast purpose tile
-    int dist = INT_MAX;
-    for (Tile &i : actionTiles) {
-        if (i.getType() != purpose) continue;
-        sf::Vector2f currVec = sprite.getPosition()-i.getPosition();
-        int currDist = static_cast<int>(std::hypot(currVec.x, currVec.y));
-        if (dist > currDist) {
-            dist = currDist;
-            target = i.getPosition() - sf::Vector2f(0, TILE_SIZE);
-        }
+void Bot::moveDirection(BotTurn turn, float dt) {
+    switch (turn) {
+    case BotTurn::down:
+        sprite.move(sf::Vector2f(0.f, 1.f) * movementSpeed * dt);
+        break;
+    case BotTurn::up:
+        sprite.move(sf::Vector2f(0.f, -1.f) * movementSpeed * dt);
+        break;
+    case BotTurn::left:
+        sprite.move(sf::Vector2f(-1.f, 0.f) * movementSpeed * dt);
+        break;
+    case BotTurn::right:
+        sprite.move(sf::Vector2f(1.f, 0.f) * movementSpeed * dt);
+        break;
     }
-    return ordersInfo[purpose] = target;
 }
 
 void Bot::onTheDestProceed(float dt, Tiles purpose) {
-    timeOnTarget += dt * waitSpeed;
-    if (purpose == Tiles::spawn) {
-        Die = true;
+    if (purpose == Tiles::no_tile) {
+        path.pop_back();
         return;
     }
+    // Bot return to spawn -> remove it
+    else if (purpose == Tiles::spawn) {
+        isDie = true;
+        return;
+    }
+    // Else calculate time on target
+    else timeOnTarget += dt * waitSpeed;
 
+    // Bot do smthng on the tile
     if (timeOnTarget >= BOT_SIZE) {
         timeOnTarget = 0.f;
         orders.pop_back();
+        path.clear();
         switch (purpose) {
         case Tiles::buy:
             // TODO::Count income
@@ -122,6 +229,11 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
     waitBar.setSize({timeOnTarget, BOT_WAIT_BAR_HEIGHT});
 }
 
+void Bot::setPosition(sf::Vector2f pos) {
+    sprite.setPosition(pos);
+    waitBar.setPosition(pos);
+}
+
 bool Bot::isDied() {
-    return Die;
+    return isDie;
 }

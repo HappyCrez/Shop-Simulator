@@ -1,19 +1,23 @@
 /*
 *   Defenitions of program
-*   Most common enums, paths, etc.
+*   Most common enums, directory paths, etc.
 */
 #define INT_MAX 0x7FFFFFFF
 
 enum class Screens : int {no_screen = -1, start, settings, load, game, size};
 enum class Align {top_left, top_right, bottom_left, bottom_right, center};
-
-// Tiles types
-#define ZONES_MAP               "./assets/files/ZonesMap.txt"
-#define TILE_SIZE               32
 enum class Tiles {
     no_tile = -4, obstacle, spawn, buy, // special tiles
     lettuce, carrot, tomato, eggplant, potato, grape, banana, foodTilesSize // food tiles 
 };
+
+// Tiles types
+#define ZONES_MAP               "./assets/files/ZonesMap.txt"
+#define WORLD_X                 100.f
+#define WORLD_Y                 100.f
+#define WORLD_WIDTH             30
+#define WORLD_HEIGHT            25
+#define TILE_SIZE               32
 
 // Textures
 #define START_SCREEN_BACKGROUND "./assets/images/Start_screen_bg.jpeg"

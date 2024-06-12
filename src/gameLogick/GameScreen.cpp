@@ -22,6 +22,6 @@ void GameScreen::render(sf::Event& event) {
 }
 
 void GameScreen::resize(sf::Vector2f wndSize) {
-    GameField::setPosition({100.f, 100.f});
+    // TODO::View port
     // TODO::Position of control panel
 }

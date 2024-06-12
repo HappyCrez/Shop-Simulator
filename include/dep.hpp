@@ -9,6 +9,8 @@
 #include <string>
 #include <math.h>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <random>
 #include <map>
 
