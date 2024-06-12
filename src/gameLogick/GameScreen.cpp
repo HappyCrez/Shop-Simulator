@@ -5,20 +5,23 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
     
     background = sf::RectangleShape(wndSize);
     background.setFillColor(sf::Color(39,39,39,1)); // dark gray
-    
-    // TODO::Control panel
 
     resize(wndSize);
 }
 
 void GameScreen::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(background);
-    target.draw(GameField::getInstance());
-    // TODO::Draw control panel
+    target.draw(gameField);
+    target.draw(panel);
+}
+
+void GameScreen::update(float dt) {
+    gameField.update(dt);
+    panel.update();
 }
 
 void GameScreen::render(sf::Event& event) {
-    // TODO::Action on control panel
+    panel.render(event);
 }
 
 void GameScreen::resize(sf::Vector2f wndSize) {

@@ -39,11 +39,8 @@ void Bot::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Bot::update(float dt, std::vector<std::vector<Tile>>& grid) {
-    if (leaveStatus) return; // Don't update died bots
-
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/4.f*3.f);
     posInGrid = (sf::Vector2i(posOnScreen) - sf::Vector2i(WORLD_X, WORLD_Y)) / TILE_SIZE;
-
 
     sf::Vector2i target = getNextTarget(grid, orders.back());
     moveToTarget(dt, target, grid);

@@ -20,6 +20,7 @@ set(sources src/Launcher.cpp
             src/gameLogick/GameScreen.cpp
             # Logick
             src/gameLogick/GameField.cpp
+            src/gameLogick/ControlPanel.cpp
             src/gameLogick/Bot.cpp
             src/gameLogick/Tile.cpp
             

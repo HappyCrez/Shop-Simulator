@@ -52,6 +52,8 @@ void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 void GameField::update(float dt) {
     static float spawnTime = 0.f;
+    dt *= timeSpeed;
+    
     spawnTime += dt;
     if (spawnTime > botSpawnTime) {
         spawnTime = 0.f;
@@ -86,4 +88,12 @@ void GameField::spawnBot() {
 
 void GameField::setBotSpawnTime(float time) {
     botSpawnTime = time;
+}
+
+int GameField::getIncome() {
+    return income;
+}
+
+void GameField::setTimeSpeed(float timeSpeed) {
+    GameField::timeSpeed = timeSpeed;
 }

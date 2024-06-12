@@ -63,7 +63,7 @@ int main() {
         // Update game screen only when game is shows
         float dt = deltaClock.restart().asSeconds();
         if (screenState == Screens::game)
-            GameField::update(dt);
+            gameScreen.update(dt);
     }
     return 0;
 }

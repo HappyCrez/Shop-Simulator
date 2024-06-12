@@ -71,7 +71,7 @@ void Button::updateLabelPos() {
             break;
         case Align::center:
             pos = rect.getPosition()+rect.getSize()/2.f;
-            pos = {round(pos.x-label.getLocalBounds().width/2.f), round(pos.y-label.getLocalBounds().height/2.f-5)};
+            pos = {round(pos.x-label.getLocalBounds().width/2.f), round(pos.y-label.getLocalBounds().height/2.f-10)};
             break;
         default: throw;
     }

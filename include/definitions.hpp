@@ -13,7 +13,7 @@ enum class Tiles {
 
 // Tiles types
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"
-#define WORLD_X                 100.f
+#define WORLD_X                 50.f
 #define WORLD_Y                 100.f
 #define WORLD_WIDTH             30
 #define WORLD_HEIGHT            25

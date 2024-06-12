@@ -14,7 +14,6 @@ class Bot : public sf::Drawable {
     int money;
     BotState state;
 
-    bool leaveStatus = false;
     bool lastStateMove = false;
     BotTurn turn = BotTurn::up;
     float frameTime = 0.f;

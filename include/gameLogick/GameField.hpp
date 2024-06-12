@@ -12,17 +12,14 @@
 class GameField : public sf::Drawable {
     inline static int income = 0;
     inline static int visits = 0;
-    
+    inline static float timeSpeed = 1.f;
 
     inline static sf::Sprite shopBG;
-
-    // buy and food tiles
     inline static std::vector<std::vector<Tile>> grid = std::vector(WORLD_HEIGHT, std::vector<Tile>(WORLD_WIDTH));
     inline static std::vector<Tile> spawnTiles;
-
-    inline static std::vector<Bot> bots;
     
     inline static float botSpawnTime = 10.f;
+    inline static std::vector<Bot> bots;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     
@@ -39,4 +36,7 @@ public:
     static void restart();
     
     static void setBotSpawnTime(float time);
+    static void setTimeSpeed(float timeSpeed);
+
+    static int getIncome();
 };
