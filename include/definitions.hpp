@@ -24,6 +24,7 @@ enum class Tiles {
 #define GAME_FIELD_BACKGROUND   "./assets/images/Shop.png"
 
 enum class BotTurn  {down, left, right, up};
+enum class BotState {alive, pay, leaved};
 #define BOT_TEXTURE_MOVE_BASE   "./assets/images/Char_00"
 #define BOT_TEXTURE_IDLE_BASE   "./assets/images/Char_idle_00"
 #define BOT_FRAME_COLS          4

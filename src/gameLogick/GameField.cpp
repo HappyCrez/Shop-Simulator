@@ -59,7 +59,12 @@ void GameField::update(float dt) {
     }
     for (int i = 0; i < bots.size(); i++) {
         bots[i].update(dt, grid);
-        if (bots[i].isDied()) {
+        
+        // add money then bot pay
+        income += bots[i].pay();
+
+        // delete bot then it leave
+        if (bots[i].isLeaved()) {
             bots.erase(bots.begin() + i);
             i--;
         }

@@ -10,6 +10,10 @@
 #include "loaders/AssetsManager.hpp"
 
 class GameField : public sf::Drawable {
+    inline static int income = 0;
+    inline static int visits = 0;
+    
+
     inline static sf::Sprite shopBG;
 
     // buy and food tiles

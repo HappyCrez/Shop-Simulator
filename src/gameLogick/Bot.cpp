@@ -6,6 +6,9 @@ Bot::Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed) {
     this->movementSpeed = movementSpeed*10;
     this->waitSpeed = 10;
     this->textureNum = textureNum;
+    state = BotState::alive;
+    money = 0;
+
     sprite.setPosition(Tile::getScreenPosition(pos) - sf::Vector2f(0, BOT_SIZE));
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/2.f);
     posInGrid = pos;
@@ -13,6 +16,7 @@ Bot::Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed) {
     waitBar.setFillColor(sf::Color::Green);
     
     fillOrderQueue(ordersCnt);
+    
 }
 
 // ordersCnt must be in bounds [0; foodTilesSize] 
@@ -32,11 +36,10 @@ void Bot::fillOrderQueue(int ordersCnt) {
 void Bot::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(sprite);
     target.draw(waitBar);
-    target.draw(rect);
 }
 
 void Bot::update(float dt, std::vector<std::vector<Tile>>& grid) {
-    if (isDie) return; // Don't update died bots
+    if (leaveStatus) return; // Don't update died bots
 
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/4.f*3.f);
     posInGrid = (sf::Vector2i(posOnScreen) - sf::Vector2i(WORLD_X, WORLD_Y)) / TILE_SIZE;
@@ -204,9 +207,9 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
         path.pop_back();
         return;
     }
-    // Bot return to spawn -> remove it
+    // Bot return to spawn -> change state
     else if (purpose == Tiles::spawn) {
-        isDie = true;
+        state = BotState::leaved;
         return;
     }
     // Else calculate time on target
@@ -219,9 +222,11 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
         path.clear();
         switch (purpose) {
         case Tiles::buy:
+            state = BotState::pay;
             // TODO::Count income
             break;
         default:
+            money += 15;
             // TODO::Cases every food different costs
             break;
         }
@@ -234,6 +239,14 @@ void Bot::setPosition(sf::Vector2f pos) {
     waitBar.setPosition(pos);
 }
 
-bool Bot::isDied() {
-    return isDie;
+int Bot::pay() {
+    if (state != BotState::pay) return 0;
+    state = BotState::alive;
+    return money;
+}
+
+bool Bot::isLeaved() {
+    if (state != BotState::leaved) return false;
+    state = BotState::alive;
+    return true;
 }

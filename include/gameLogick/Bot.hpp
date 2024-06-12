@@ -11,15 +11,16 @@ class Bot : public sf::Drawable {
     float movementSpeed;
     float waitSpeed;
     int textureNum;
+    int money;
+    BotState state;
 
-    bool isDie = false;
+    bool leaveStatus = false;
     bool lastStateMove = false;
     BotTurn turn = BotTurn::up;
     float frameTime = 0.f;
     float timeOnTarget = 0.f;
     float frameSpeed = 6.f;
     
-    sf::RectangleShape rect;
     sf::Sprite sprite;
     sf::Vector2i posInGrid;
     sf::Vector2f posOnScreen;
@@ -44,5 +45,6 @@ public:
 
     void setPosition(sf::Vector2f pos);
     
-    bool isDied();
+    int pay();
+    bool isLeaved();
 };
