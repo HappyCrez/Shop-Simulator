@@ -36,7 +36,7 @@ public:
     static void restart();
     
     static void setBotSpawnTime(float time);
-    static void setTimeSpeed(float timeSpeed);
+    static void setTimeSpeed(GameSpeed state);
 
     static int getIncome();
 };

@@ -7,16 +7,18 @@
 #include "dep.hpp"
 #include "gameLogick/GameField.hpp"
 #include "UI/Button.hpp"
+#include "UI/ScrollBar.hpp"
 #include "loaders/AssetsManager.hpp"
-
-enum class BtnsPlay {pause, play, speedUp, size};
 
 class ControlPanel : public sf::Drawable {
     sf::RectangleShape bg;
     sf::Text moneyLabel;
+    sf::Text timeSpeedLabel;
     int lastIncomeVal = 0;
 
-    std::vector<Button> btnsPlay;
+    ScrollBar timeline;
+    GameSpeed gameSpeedState;
+
     sf::Color btnBG;
     sf::Color btnHoverBG;
     sf::Color outlineColor;
@@ -24,7 +26,8 @@ class ControlPanel : public sf::Drawable {
     int outlineHoverSize = 2;
 
     void updateIncomeLabel();
-    Button createButton(sf::Vector2f size, std::string label);
+    Button createButton(sf::Vector2f position, std::string label);
+    void createText(sf::Text& text, sf::Vector2f position, std::string label);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     void onHover(Button& btn);

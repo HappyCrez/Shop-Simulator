@@ -25,7 +25,8 @@ set(sources src/Launcher.cpp
             src/gameLogick/Tile.cpp
             
             # User Interface
-            src/UI/Button.cpp)
+            src/UI/Button.cpp
+            src/UI/ScrollBar.cpp)
 
 add_executable("${PROJECT_NAME}" "${sources}")
 target_link_libraries("${PROJECT_NAME}" sfml-graphics sfml-audio sfml-network sfml-window sfml-system)
