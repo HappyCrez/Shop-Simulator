@@ -13,7 +13,7 @@
 class GameScreen : public Screen {
     sf::RectangleShape background;
     GameField& gameField = GameField::getInstance();
-    ControlPanel panel;
+    ControlPanel& panel = ControlPanel::getInstance();
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     virtual void render(sf::Event& event);

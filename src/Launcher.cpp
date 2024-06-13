@@ -16,6 +16,7 @@ void loadAllReferences() {
     // Singleton with deffered initialization,
     // so first configuration should be in launcher
     GameField::getInstance();
+    ControlPanel::getInstance();
 }
 
 std::vector<Screen*> GameScreens((int)Screens::size);

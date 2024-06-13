@@ -1,6 +1,6 @@
 
 /*
-*   Class inhereted Drawable
+*   Singleton Class inhereted Drawable 
 *   Funcs: Controls on simulation, buttons, bars, etc.
 */
 #pragma once
@@ -11,37 +11,57 @@
 #include "loaders/AssetsManager.hpp"
 
 class ControlPanel : public sf::Drawable {
-    sf::RectangleShape bg;
-    sf::Text timeSpeedLabel;
-    sf::Text moneyLabel;
-    sf::Text discontLabel;
-    int lastIncomeVal = 0;
-    float lastDiscontVal = 0.f;
-    int discontStep = 4;
+    inline static sf::RectangleShape bg {{860, 800}};
+    inline static sf::Text timeSpeedLabel;
 
-    ScrollBar timeSpeedBar;
-    ScrollBar discontBar;
+    inline static sf::Text dayTimeLabel;
+    inline static sf::Text dayLabel;
+    inline static sf::Text incomeLabel;
+    inline static sf::Text discontLabel;
+    inline static int curIncomeVal = 0;
+    inline static float curDiscontVal = 0.f;
+    inline static int discontStep = 4;
+    
+    inline static sf::Text dayStatsLabel;
+    inline static sf::Text lastIncomeLabel;
+    inline static sf::Text lastDiscontLabel;
+    inline static int lastIncomeVal = 0;
+    inline static float lastDiscontVal = 0.f;
+    
+    inline static ScrollBar timeSpeedBar;
+    inline static ScrollBar discontBar;
+    inline static GameSpeed gameSpeedState;
+    
 
-    sf::Color btnBG;
-    sf::Color btnHoverBG;
-    sf::Color outlineColor;
-    int outlineSize = 1;
-    int outlineHoverSize = 2;
+    inline static float timeNow = 0.f;
+    inline static int dayCount;
 
-    void updateIncomeLabel();
-    void updateDiscontLabel();
+    inline static sf::Color btnBG;
+    inline static sf::Color btnHoverBG;
+    inline static sf::Color outlineColor;
+    inline static int outlineSize = 1;
+    inline static int outlineHoverSize = 2;
 
-    Button createButton(sf::Vector2f position, std::string label);
-    void createText(sf::Text& text, sf::Vector2f position, std::string label);
+    static void updateIncomeLabel();
+    static void updateDiscontLabel();
+    static void updateDayTimeLabel(float time);
+    static void newDay();
+
+    static Button createButton(sf::Vector2f position, std::string label);
+    static void createText(sf::Text& text, sf::Vector2f position, std::string label);
     
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    void onHover(Button& btn);
-    void dropHover(Button& btn);
+    static void onHover(Button& btn);
+    static void dropHover(Button& btn);
 
-public:
     ControlPanel();
-    
-    void render(sf::Event& event);
-    void update();
+    ControlPanel( const ControlPanel& );  
+    ControlPanel& operator=( ControlPanel& );
+public:
+    static ControlPanel& getInstance();
+
+    static void render(sf::Event& event);
+    static void update(float dt);
+    static void restartGame();
 };

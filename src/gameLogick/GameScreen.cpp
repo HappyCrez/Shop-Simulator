@@ -17,7 +17,7 @@ void GameScreen::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 void GameScreen::update(float dt) {
     gameField.update(dt);
-    panel.update();
+    panel.update(dt);
 }
 
 void GameScreen::render(sf::Event& event) {

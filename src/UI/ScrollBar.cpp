@@ -52,7 +52,7 @@ void ScrollBar::update(sf::Event& event) {
         if (event.mouseButton.button != sf::Mouse::Left) break;
         clickedMousePos = {event.mouseButton.x, event.mouseButton.y};
         thumbPos = sf::Vector2i(thumb.getPosition());
-        thumbSize = thumb.getRadius();
+        thumbSize = static_cast<int>(thumb.getRadius())<<1;
         // check click on thumb bounds
         if (thumbPos.x - thumbSize < clickedMousePos.x && thumbPos.x + thumbSize > clickedMousePos.x &&
             thumbPos.y + thumbSize > clickedMousePos.y && thumbPos.y - thumbSize < clickedMousePos.y)

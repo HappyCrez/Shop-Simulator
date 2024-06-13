@@ -34,7 +34,7 @@ public:
     static GameField& getInstance();
 
     static void update(float dt);
-    static void restart();
+    static void restartDay();
     
     static void setBotSpawnTime(float time);
     static void setTimeSpeed(GameSpeed state);

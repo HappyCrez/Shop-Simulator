@@ -73,9 +73,10 @@ void GameField::update(float dt) {
     }
 }
 
-void GameField::restart() {
+void GameField::restartDay() {
     bots.clear();
     spawnBot();
+    income = 0;
 }
 
 void GameField::spawnBot() {

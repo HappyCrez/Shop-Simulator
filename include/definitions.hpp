@@ -10,7 +10,10 @@ enum class Tiles {
     no_tile = -4, obstacle, spawn, buy, // special tiles
     lettuce, carrot, tomato, eggplant, potato, grape, banana, foodTilesSize // food tiles 
 };
-enum class GameSpeed {stop, slow, fast, very_fast, size};
+enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
+
+#define DAY_WORK_TIME           600.f
+#define SHOP_OPEN_TIME          9
 
 // Tiles types
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"

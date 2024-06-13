@@ -5,7 +5,7 @@
 #pragma once
 #include "dep.hpp"
 #include "gameLogick/Screen.hpp"
-#include "gameLogick/GameField.hpp"
+#include "gameLogick/ControlPanel.hpp"
 #include "loaders/AssetsManager.hpp"
 #include "UI/Button.hpp"
 
