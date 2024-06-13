@@ -75,11 +75,13 @@ void GameField::update(float dt) {
 
 void GameField::restartDay() {
     bots.clear();
-    spawnBot();
+    visits = 0;
     income = 0;
+    spawnBot();
 }
 
 void GameField::spawnBot() {
+    visits++;
     int botSpeed = BOT_MIN_SPEED + rand() % 2;
     int botSkin = rand()%BOT_TEXTURES_CNT + 1;
     int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
@@ -89,6 +91,10 @@ void GameField::spawnBot() {
 
 void GameField::setBotSpawnTime(float time) {
     botSpawnTime = time;
+}
+
+int GameField::getVisits() {
+    return visits;
 }
 
 int GameField::getIncome() {

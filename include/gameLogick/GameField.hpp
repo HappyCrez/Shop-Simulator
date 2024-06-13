@@ -40,6 +40,7 @@ public:
     static void setTimeSpeed(GameSpeed state);
     static void setDiscont(float discont);
 
+    static int getVisits();
     static int getIncome();
     static float getDiscont();
 };
