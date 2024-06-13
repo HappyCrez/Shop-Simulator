@@ -63,7 +63,7 @@ void GameField::update(float dt) {
         bots[i].update(dt, grid);
         
         // add money then bot pay
-        income += bots[i].pay();
+        income += (bots[i].pay() - bots[i].pay() * discont);
 
         // delete bot then it leave
         if (bots[i].isLeaved()) {
@@ -94,6 +94,14 @@ int GameField::getIncome() {
     return income;
 }
 
+float GameField::getDiscont() {
+    return discont;
+}
+
 void GameField::setTimeSpeed(GameSpeed state) {
     timeSpeed = static_cast<float>(state);
+}
+
+void GameField::setDiscont(float discont) {
+    GameField::discont = discont;
 }

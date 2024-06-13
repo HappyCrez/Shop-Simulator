@@ -220,12 +220,9 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
         switch (purpose) {
         case Tiles::buy:
             state = BotState::pay;
-            // TODO::Count income
             break;
         default:
-            money += 15;
-            // TODO::Cases every food different costs
-            break;
+            money += ((int)purpose + 1) * 4;
         }
     }
     waitBar.setSize({timeOnTarget, BOT_WAIT_BAR_HEIGHT});

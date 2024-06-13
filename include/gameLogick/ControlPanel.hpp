@@ -12,12 +12,15 @@
 
 class ControlPanel : public sf::Drawable {
     sf::RectangleShape bg;
-    sf::Text moneyLabel;
     sf::Text timeSpeedLabel;
+    sf::Text moneyLabel;
+    sf::Text discontLabel;
     int lastIncomeVal = 0;
+    float lastDiscontVal = 0.f;
+    int discontStep = 4;
 
-    ScrollBar timeline;
-    GameSpeed gameSpeedState;
+    ScrollBar timeSpeedBar;
+    ScrollBar discontBar;
 
     sf::Color btnBG;
     sf::Color btnHoverBG;
@@ -26,8 +29,11 @@ class ControlPanel : public sf::Drawable {
     int outlineHoverSize = 2;
 
     void updateIncomeLabel();
+    void updateDiscontLabel();
+
     Button createButton(sf::Vector2f position, std::string label);
     void createText(sf::Text& text, sf::Vector2f position, std::string label);
+    
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     void onHover(Button& btn);

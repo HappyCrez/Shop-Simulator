@@ -5,15 +5,24 @@ ControlPanel::ControlPanel() {
     bg.setSize({860, 800});
     bg.setPosition({WORLD_X + WORLD_WIDTH*TILE_SIZE, WORLD_Y});
 
-    createText(moneyLabel, {200.f, 50.f}, "Shop income: " + std::to_string(lastIncomeVal));
-    createText(timeSpeedLabel, {200.f, 120.f}, "Time speed");
+    createText(moneyLabel,      {200.f, 50.f}, "Shop income: " + std::to_string(lastIncomeVal));
+    createText(timeSpeedLabel,  {200.f, 120.f}, "Time speed");
+    createText(discontLabel,    {200.f, 200.f}, "Discont value: 0%");
 
-    gameSpeedState = GameSpeed::slow;
+    GameSpeed gameSpeedState = GameSpeed::slow;
     GameField::setTimeSpeed(gameSpeedState);
-    timeline = ScrollBar(
+    timeSpeedBar = ScrollBar(
         bg.getPosition() + sf::Vector2f(200.f, 170.f), {200.f, 20.f}, (int)GameSpeed::size, (int)gameSpeedState,
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         );
+    
+
+    float discontVal = 0.f;
+    GameField::setDiscont(discontVal);
+    discontBar = ScrollBar(
+        bg.getPosition() + sf::Vector2f(200.f, 250.f), {400.f, 20.f}, 25, (int)discontVal,
+        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+        ); 
 
 
     btnBG = sf::Color(120, 120, 120);
@@ -41,11 +50,20 @@ void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(bg);
     target.draw(moneyLabel);
     target.draw(timeSpeedLabel);
-    target.draw(timeline);
+    target.draw(timeSpeedBar);
+    target.draw(discontLabel);
+    target.draw(discontBar);
 }
 
 void ControlPanel::update() {
     updateIncomeLabel();
+    updateDiscontLabel();
+}
+
+void ControlPanel::updateDiscontLabel() {
+    if (lastDiscontVal == GameField::getDiscont()) return;
+    lastDiscontVal = GameField::getDiscont();
+    discontLabel.setString("Discont value: " + std::to_string((int)(lastDiscontVal*100)) + "%");
 }
 
 void ControlPanel::updateIncomeLabel() {
@@ -57,12 +75,11 @@ void ControlPanel::updateIncomeLabel() {
 void ControlPanel::render(sf::Event& event) {
     sf::Vector2i mouseCoord;
 
-    timeline.update(event);
-    GameSpeed state = (GameSpeed)timeline.getStep();
-    if (state != gameSpeedState) {
-        gameSpeedState = state;
-        GameField::setTimeSpeed(state);
-    }
+    timeSpeedBar.update(event);
+    GameField::setTimeSpeed((GameSpeed)timeSpeedBar.getStep());
+
+    discontBar.update(event);
+    GameField::setDiscont(discontBar.getStep()/100.f*discontStep);
 }
 
 void ControlPanel::onHover(Button& btn) {
