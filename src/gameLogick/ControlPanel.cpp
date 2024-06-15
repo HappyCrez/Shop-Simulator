@@ -33,7 +33,7 @@ ControlPanel::ControlPanel() {
     float discontVal = 0.f;
     GameField::setDiscont(discontVal);
     discontBar = ScrollBar(
-        bg.getPosition() + sf::Vector2f(110.f, 250.f), {500.f, 20.f}, 25, (int)discontVal,
+        bg.getPosition() + sf::Vector2f(110.f, 250.f), {600.f, 20.f}, 25, (int)discontVal,
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         ); 
 

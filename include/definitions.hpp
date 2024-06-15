@@ -8,7 +8,7 @@ enum class Screens : int {no_screen = -1, start, settings, load, game, size};
 enum class Align {top_left, top_right, bottom_left, bottom_right, center};
 enum class Tiles {
     no_tile = -4, obstacle, spawn, buy, // special tiles
-    lettuce, carrot, tomato, eggplant, potato, grape, banana, foodTilesSize // food tiles 
+    lettuce, carrot, tomato, eggplant, potato, grape, banana, watermellon, corn, onion, strawberrie, cauliflower, foodTilesSize // food tiles 
 };
 enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 
@@ -17,14 +17,14 @@ enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 
 // Tiles types
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"
-#define WORLD_X                 50.f
-#define WORLD_Y                 100.f
+#define WORLD_X                 480.f
+#define WORLD_Y                 112.f
 #define WORLD_WIDTH             30
 #define WORLD_HEIGHT            25
 #define TILE_SIZE               32
 
 // Textures
-#define START_SCREEN_BACKGROUND "./assets/images/Start_screen_bg.jpeg"
+#define START_SCREEN_BACKGROUND "./assets/images/Start_screen.png"
 #define GAME_FIELD_BACKGROUND   "./assets/images/Shop.png"
 
 enum class BotTurn  {down, left, right, up};

@@ -4,7 +4,7 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
     sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
     
     background = sf::RectangleShape(wndSize);
-    background.setFillColor(sf::Color(39,39,39,1)); // dark gray
+    background.setFillColor(sf::Color(68,89,93)); // dark gray
 
     resize(wndSize);
 }

@@ -29,7 +29,7 @@ int main() {
     loadAllReferences();
 
     sf::Clock deltaClock;
-    srand(static_cast<unsigned int>(sf::Time().asMilliseconds()));  // set rand seed
+    srand(time(0));  // set rand seed
 
     Screens screenState = Screens::start;
     StartScreen startScreen(wnd, screenState);
