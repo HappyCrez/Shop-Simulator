@@ -38,6 +38,7 @@ public:
     void setFontSize(int size);
     void setAlign(Align align);
     void setStyle(sf::Text::Style style);
+    void setString(std::string str);
 
     sf::Vector2f getSize();
     sf::Vector2f getPosition();

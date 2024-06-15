@@ -37,9 +37,9 @@ void Tile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 sf::Vector2f Tile::getScreenPosition(sf::Vector2i gridPosition) {
-    return sf::Vector2f(gridPosition * TILE_SIZE) + sf::Vector2f(WORLD_X, WORLD_Y); 
+    return sf::Vector2f(gridPosition * TILE_SIZE); 
 }
 
 sf::Vector2i Tile::getGridPosition(sf::Vector2f screenPosition) {
-    return sf::Vector2i(screenPosition - sf::Vector2f(WORLD_X, WORLD_Y)) / TILE_SIZE;
+    return sf::Vector2i(screenPosition) / TILE_SIZE;
 }

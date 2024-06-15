@@ -116,6 +116,11 @@ void Button::setStyle(sf::Text::Style style) {
     label.setStyle(style);
 }
 
+void Button::setString(std::string str) {
+    label.setString(str);
+    updateLabelPos();
+}
+
 // Getters
 sf::Vector2f Button::getSize() {
     return size;

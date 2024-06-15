@@ -2,8 +2,9 @@
 
 GameField::GameField() {
     shopBG.setTexture(AssetsManager::loadTexture(GAME_FIELD_BACKGROUND));
-    shopBG.setPosition(WORLD_X, WORLD_Y);
     createTiles();
+
+    setPosition({0, 0});
 }
 
 GameField& GameField::getInstance() {
@@ -24,8 +25,8 @@ void GameField::createTiles() {
             tileType = atoi(zonesMap.data()) + (int)Tiles::no_tile; // some tiles are special
 
             Tile tile((Tiles)tileType, {
-                static_cast<float>(j * TILE_SIZE) + WORLD_X,  // Position on the screen 
-                static_cast<float>(i * TILE_SIZE) + WORLD_Y}  //
+                static_cast<float>(j * TILE_SIZE),  // Position on the screen 
+                static_cast<float>(i * TILE_SIZE)}  //
                 );
             switch ((Tiles)tileType) {
             // proceed special tiles
@@ -60,7 +61,7 @@ void GameField::update(float dt) {
         spawnBot();
     }
     for (int i = 0; i < bots.size(); i++) {
-        bots[i].update(dt, grid);
+        bots[i].update(dt, shopBG.getPosition(), grid);
         
         // add money then bot pay
         income += (bots[i].pay() - bots[i].pay() * discont);
@@ -85,8 +86,21 @@ void GameField::spawnBot() {
     int botSpeed = BOT_MIN_SPEED + rand() % 2;
     int botSkin = rand()%BOT_TEXTURES_CNT + 1;
     int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
-    sf::Vector2i botSpawnPos = Tile::getGridPosition(spawnTiles[rand()%spawnTiles.size()].getPosition());
-    bots.push_back(Bot(botSpawnPos, botSkin, ordersCnt, botSpeed));
+    sf::Vector2i botSpawnPos = Tile::getGridPosition(spawnTiles[rand()%spawnTiles.size()].getPosition() - shopBG.getPosition());
+    bots.push_back(Bot(botSpawnPos, shopBG.getPosition(), botSkin, ordersCnt, botSpeed));
+}
+
+void GameField::setPosition(sf::Vector2f position) {
+    // calculate offset relative last position
+    sf::Vector2f offset = position - shopBG.getPosition();
+    shopBG.setPosition(position);
+    for (std::vector<Tile>& vec : grid) 
+        for (Tile &tile : vec)
+            tile.setPosition(tile.getPosition() + offset);
+    for (Tile& tile : spawnTiles)
+        tile.setPosition(tile.getPosition() + offset); 
+    for (Bot& bot : bots)
+        bot.setPosition(bot.getPosition() + offset);
 }
 
 void GameField::setBotSpawnTime(float time) {

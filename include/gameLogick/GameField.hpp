@@ -36,6 +36,7 @@ public:
     static void update(float dt);
     static void restartDay();
     
+    static void setPosition(sf::Vector2f position);
     static void setBotSpawnTime(float time);
     static void setTimeSpeed(GameSpeed state);
     static void setDiscont(float discont);

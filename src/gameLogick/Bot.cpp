@@ -1,17 +1,17 @@
 #include "gameLogick/Bot.hpp"
 
-Bot::Bot(int textureNum, int ordersCnt, float movementSpeed) : Bot({0, 0}, textureNum, ordersCnt, movementSpeed) { }
+Bot::Bot(int textureNum, int ordersCnt, float movementSpeed) : Bot({0, 0}, {0, 0}, textureNum, ordersCnt, movementSpeed) { }
 
-Bot::Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed) {
-    this->movementSpeed = movementSpeed*10;
-    this->waitSpeed = 10;
+Bot::Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed) {
+    this->movementSpeed = movementSpeed*10.f;
+    this->waitSpeed = 20.f;
     this->textureNum = textureNum;
     state = BotState::alive;
     money = 0;
 
-    sprite.setPosition(Tile::getScreenPosition(pos) - sf::Vector2f(0, BOT_SIZE));
+    sprite.setPosition(Tile::getScreenPosition(position) + offset - sf::Vector2f(0, BOT_SIZE));
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/2.f);
-    posInGrid = pos;
+    posInGrid = position;
     
     waitBar.setFillColor(sf::Color::Green);
     
@@ -38,12 +38,12 @@ void Bot::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(waitBar);
 }
 
-void Bot::update(float dt, std::vector<std::vector<Tile>>& grid) {
+void Bot::update(float dt, sf::Vector2f offset, std::vector<std::vector<Tile>>& grid) {
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/4.f*3.f);
-    posInGrid = (sf::Vector2i(posOnScreen) - sf::Vector2i(WORLD_X, WORLD_Y)) / TILE_SIZE;
+    posInGrid = sf::Vector2i(posOnScreen - offset) / TILE_SIZE;
 
     sf::Vector2i target = getNextTarget(grid, orders.back());
-    moveToTarget(dt, target, grid);
+    moveToTarget(dt, target, offset, grid);
     waitBar.setPosition(sprite.getPosition()); // update bar position
 }
 
@@ -127,7 +127,7 @@ void Bot::generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Til
     */
 }
 
-void Bot::moveToTarget(float dt, sf::Vector2i& target, std::vector<std::vector<Tile>>& grid) {
+void Bot::moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std::vector<std::vector<Tile>>& grid) {
     frameTime += dt * frameSpeed;
     if (int(frameTime) >= BOT_FRAME_COLS) frameTime = 0;
 
@@ -145,7 +145,7 @@ void Bot::moveToTarget(float dt, sf::Vector2i& target, std::vector<std::vector<T
         std::cout << "\n";
     }
     */
-    sf::Vector2f targetPos = Tile::getScreenPosition(target) + sf::Vector2f(TILE_SIZE/2.f, TILE_SIZE/2.f);
+    sf::Vector2f targetPos = Tile::getScreenPosition(target) + offset + sf::Vector2f(TILE_SIZE/2.f, TILE_SIZE/2.f);
 
     if (posOnScreen.y < targetPos.y - TARGET_OFFSET) {
         turn = BotTurn::down;
@@ -243,4 +243,8 @@ bool Bot::isLeaved() {
     if (state != BotState::leaved) return false;
     state = BotState::alive;
     return true;
+}
+
+sf::Vector2f Bot::getPosition() {
+    return sprite.getPosition();
 }

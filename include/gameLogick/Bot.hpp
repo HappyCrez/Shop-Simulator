@@ -32,18 +32,19 @@ class Bot : public sf::Drawable {
     
     sf::Vector2i getNextTarget(std::vector<std::vector<Tile>>& grid, Tiles& purpose);
     void generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Tile>>& grid, Tiles& purpose);
-    void moveToTarget(float dt, sf::Vector2i& target, std::vector<std::vector<Tile>>& grid);
+    void moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std::vector<std::vector<Tile>>& grid);
     void onTheDestProceed(float dt, Tiles purpose);
     void moveDirection(BotTurn turn, float dt);
 
 public:
     Bot(int textureNum, int ordersCnt, float movementSpeed);
-    Bot(sf::Vector2i pos, int textureNum, int ordersCnt, float movementSpeed);
+    Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed);
     
-    void update(float dt, std::vector<std::vector<Tile>>& grid);
+    void update(float dt, sf::Vector2f offset, std::vector<std::vector<Tile>>& grid);
 
     void setPosition(sf::Vector2f pos);
     
     int pay();
     bool isLeaved();
+    sf::Vector2f getPosition();
 };

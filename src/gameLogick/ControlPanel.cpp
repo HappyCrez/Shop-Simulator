@@ -7,20 +7,25 @@ ControlPanel& ControlPanel::getInstance() {
 }
 
 ControlPanel::ControlPanel() {
-    bg.setFillColor(sf::Color(39,39,39));
-    bg.setPosition({WORLD_X + WORLD_WIDTH*TILE_SIZE, WORLD_Y});
+    bg.setFillColor(sf::Color(39,39,39, 125));
 
-    restartGame();
+    collapse = createButton();
 
-    createText(dayText,     {100.f, 20.f});
-    createText(dayTimeText, {400.f, 20.f});
-    
-    createText(incomeText,  {100.f, 60.f});
-    createText(discontText, {400.f, 60.f});
-    createText(visitsText,  {100.f, 100.f});
+    labels.resize((int)Label::size);
+    labels[(int)Label::day_count    ] = createText({100.f, 20.f});
+    labels[(int)Label::day_time     ] = createText({400.f, 20.f});
+    labels[(int)Label::day_stats    ] = createText({100.f, 400.f});
+    labels[(int)Label::last_income  ] = createText({100.f, 460.f});
+    labels[(int)Label::today_income ] = createText({100.f, 60.f});
+    labels[(int)Label::last_visits  ] = createText({400.f, 460.f});
+    labels[(int)Label::today_visits ] = createText({100.f, 100.f});
+    labels[(int)Label::last_discont ] = createText({100.f, 490.f});
+    labels[(int)Label::today_discont] = createText({400.f, 60.f});
+    labels[(int)Label::next_discont ] = createText({100.f, 200.f});
+    labels[(int)Label::time_speed   ] = createText({100.f, 140.f});
 
-    createText(timeSpeedText, {100.f, 140.f});
-    timeSpeedText.setString("Time speed");
+    labels[(int)Label::time_speed   ].setString("Time speed");
+    labels[(int)Label::day_stats    ].setString("PREV DAY STATS");
     
     gameSpeedState = GameSpeed::slow;
     GameField::setTimeSpeed(gameSpeedState);
@@ -29,7 +34,6 @@ ControlPanel::ControlPanel() {
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         );
 
-    createText(nextDayDiscontText,    {100.f, 200.f});
     float discontVal = 0.f;
     GameField::setDiscont(discontVal);
     discontBar = ScrollBar(
@@ -37,38 +41,23 @@ ControlPanel::ControlPanel() {
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         ); 
 
-    createText(dayStatsText,   {100.f, 400.f});
-    dayStatsText.setString("PREV DAY STATS");
-    createText(lastIncomeText, {100.f, 460.f});
-    createText(lastVisitsText, {400.f, 460.f});
-    createText(lastDiscontText,{100.f, 490.f});
-
-    btnBG = sf::Color(120, 120, 120);
-    btnHoverBG = sf::Color(130, 130, 130);
+    btnBG = sf::Color::Black;
+    btnHoverBG = sf::Color(10, 10, 10);
     outlineColor = sf::Color(255, 255, 255);
+
+    restartGame();
+    setPosition({0, 0});
+    show();
 }
 
 void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    target.draw(collapse);
+
+    if (!isVisible) return;
     target.draw(bg);
     
-    // texts
-    target.draw(dayText);
-    target.draw(dayTimeText);
-    target.draw(dayStatsText);
-    target.draw(timeSpeedText);
-    
-    // Income text
-    target.draw(lastIncomeText);
-    target.draw(incomeText);
-    
-    // Discont text
-    target.draw(lastDiscontText);
-    target.draw(discontText);
-    target.draw(nextDayDiscontText);
-    
-    // Visits text
-    target.draw(lastVisitsText);
-    target.draw(visitsText);
+    for (sf::Text& label : labels)
+        target.draw(label);
 
     // scrollbars
     target.draw(timeSpeedBar);
@@ -91,6 +80,27 @@ void ControlPanel::update(float dt) {
 void ControlPanel::render(sf::Event& event) {
     sf::Vector2i mouseCoord;
 
+    switch (event.type) {
+    case sf::Event::MouseButtonPressed:
+        if (event.mouseButton.button != sf::Mouse::Left) return;
+        mouseCoord = {event.mouseButton.x, event.mouseButton.y};
+        if (collapse.isInBounds(mouseCoord) ) {
+            if (isVisible) hide();
+            else show();
+        }
+        break;
+    case sf::Event::MouseMoved:
+        mouseCoord = {event.mouseMove.x, event.mouseMove.y};
+        if (collapse.isInBounds(mouseCoord) ) {
+            onHover(collapse);
+        }
+        else {
+            dropHover(collapse);
+        }
+        break;
+    }
+    collapse.isInBounds(mouseCoord);
+
     timeSpeedBar.update(event);
     gameSpeedState = (GameSpeed)timeSpeedBar.getStep();
     GameField::setTimeSpeed(gameSpeedState);
@@ -100,7 +110,7 @@ void ControlPanel::render(sf::Event& event) {
 
 void ControlPanel::newDay() {
     dayCount++;
-    dayText.setString("Day #" + std::to_string(dayCount));
+    labels[(int)Label::day_count].setString("Day #" + std::to_string(dayCount));
 
     updateLastDiscontText(GameField::getDiscont());
     updateLastIncomeText(GameField::getIncome());
@@ -119,12 +129,31 @@ void ControlPanel::restartGame() {
     newDay();
 }
 
+void ControlPanel::show() {
+    isVisible = true;
+    bg.setSize(panelSize);
+    updateCollapseButton();
+    collapse.setString("hide");
+}
+
+void ControlPanel::hide() {
+    isVisible = false;
+    bg.setSize({0, 0});
+    updateCollapseButton();
+    collapse.setString("show");
+}
+
+void ControlPanel::updateCollapseButton() {
+    collapse.setPosition({bg.getPosition().x + bg.getSize().x + 2, 2});
+}
+
 //
 //  Buttons (create and hover funcs)
 //
-Button ControlPanel::createButton(sf::Vector2f position, std::string text) {
-    Button btn({110, 35}, position, btnBG);
-    btn.setLabel(AssetsManager::loadFont(BLAZMA_FONT), text, sf::Color::White, 24, Align::center, sf::Text::Style::Regular);
+Button ControlPanel::createButton() {
+    Button btn({110, 35}, {0, 0}, btnBG);
+    btn.setLabel(AssetsManager::loadFont(BLAZMA_FONT), "", sf::Color::White, 24, Align::center, sf::Text::Style::Regular);
+    btn.setBGColor(btnBG);
     btn.setOutline(outlineSize, outlineColor);
     return btn;
 }
@@ -139,15 +168,14 @@ void ControlPanel::dropHover(Button& btn) {
     btn.setOutline(outlineSize, outlineColor);
 }
 
-
 //
 //  Text funcs
 //
-void ControlPanel::createText(sf::Text& text, sf::Vector2f position) {
+sf::Text ControlPanel::createText(sf::Vector2f position) {
+    sf::Text text("", AssetsManager::loadFont(BLAZMA_FONT), 24);
     text.setPosition(bg.getPosition() + position);
-    text.setFont(AssetsManager::loadFont(BLAZMA_FONT));
     text.setFillColor(sf::Color::White);
-    text.setCharacterSize(24);
+    return text;
 }
 
 //
@@ -158,27 +186,27 @@ void ControlPanel::updateDayTimeText(float time) {
     int minutes = static_cast<int>(time) % 60;
     std::string hoursStr = hours > 9 ? std::to_string(hours) : "0" + std::to_string(hours);
     std::string minutesStr = minutes > 9 ? std::to_string(minutes) : "0" + std::to_string(minutes);
-    dayTimeText.setString("Time " + hoursStr + "h " + minutesStr + "m");
+    labels[(int)Label::day_time].setString("Time " + hoursStr + "h " + minutesStr + "m");
 }
 
 void ControlPanel::updateNextDayDiscontText(int discont) {
     static int prevDiscont = -1;
     if (prevDiscont == discont) return;
-    nextDayDiscontText.setString("Next day discont: " + std::to_string(discont) + "%");
+    labels[(int)Label::next_discont].setString("Next day discont: " + std::to_string(discont) + "%");
     prevDiscont = discont;
 }
 
 void ControlPanel::updateIncomeText(int income) {
     static int prevIncome = -1;
     if (prevIncome == income) return;
-    incomeText.setString("Shop income: " + std::to_string(income));
+    labels[(int)Label::today_income].setString("Shop income: " + std::to_string(income));
     prevIncome = income;
 }
 
 void ControlPanel::updateVisitsText(int visits) {
     static int prevVisits = -1;
     if (prevVisits == visits) return;
-    visitsText.setString("Clients count: " + std::to_string(visits));
+    labels[(int)Label::today_visits].setString("Clients count: " + std::to_string(visits));
     prevVisits = visits;
 }
 
@@ -186,21 +214,40 @@ void ControlPanel::updateVisitsText(int visits) {
 //  Update ever game day
 //
 void ControlPanel::updateDiscontText(int discont) {
-    discontText.setString("Today discont: " + std::to_string(discont) + "%");
+    labels[(int)Label::today_discont].setString("Today discont: " + std::to_string(discont) + "%");
 }
 
 void ControlPanel::updateLastDiscontText(int discont) {
-    lastDiscontText.setString("Last discont: " + std::to_string(discont) + "%");
+    labels[(int)Label::last_discont].setString("Last discont: " + std::to_string(discont) + "%");
 }
 
 void ControlPanel::updateLastIncomeText(int income) {
-    lastIncomeText.setString("Last income: " + std::to_string(income));
+    labels[(int)Label::last_income].setString("Last income: " + std::to_string(income));
 }
 
 void ControlPanel::updateLastVisitsText(int visits) {
-    lastVisitsText.setString("Last clients count: " + std::to_string(visits));
+    labels[(int)Label::last_visits].setString("Last clients count: " + std::to_string(visits));
 }
 
 void ControlPanel::updateDayText() {
-    dayText.setString("Day #: " + std::to_string(dayCount));
+    labels[(int)Label::day_count].setString("Day #: " + std::to_string(dayCount));
+}
+
+//
+//  Setters
+//
+void ControlPanel::setPosition(sf::Vector2f position) {
+    sf::Vector2f offset = position - bg.getPosition();
+    bg.setPosition(position);
+    for (sf::Text& label : labels)
+        label.setPosition(label.getPosition() + offset);
+    timeSpeedBar.setPosition(timeSpeedBar.getPosition() + offset);
+    discontBar.setPosition(discontBar.getPosition() + offset);
+}
+
+void ControlPanel::setSize(sf::Vector2f size) {
+    panelSize = size;
+    // update panel size
+    if (isVisible) show();
+    else hide();
 }

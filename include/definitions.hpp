@@ -17,8 +17,6 @@ enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 
 // Tiles types
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"
-#define WORLD_X                 480.f
-#define WORLD_Y                 112.f
 #define WORLD_WIDTH             30
 #define WORLD_HEIGHT            25
 #define TILE_SIZE               32
