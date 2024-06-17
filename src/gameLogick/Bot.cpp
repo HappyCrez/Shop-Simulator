@@ -1,10 +1,10 @@
 #include "gameLogick/Bot.hpp"
 
-Bot::Bot(int textureNum, int ordersCnt, float movementSpeed) : Bot({0, 0}, {0, 0}, textureNum, ordersCnt, movementSpeed) { }
+Bot::Bot(int textureNum, int ordersCnt, float movementSpeed) : Bot({0, 0}, {0, 0}, textureNum, ordersCnt, movementSpeed, serveTime) { }
 
-Bot::Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed) {
+Bot::Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed, float serveTime) {
     this->movementSpeed = movementSpeed*10.f;
-    this->waitSpeed = 20.f;
+    this->serveTime = serveTime;
     this->textureNum = textureNum;
     state = BotState::alive;
     money = 0;
@@ -210,10 +210,10 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
         return;
     }
     // Else calculate time on target
-    else timeOnTarget += dt * waitSpeed;
+    timeOnTarget += dt;
 
     // Bot do smthng on the tile
-    if (timeOnTarget >= BOT_SIZE) {
+    if (timeOnTarget >= serveTime) {
         timeOnTarget = 0.f;
         orders.pop_back();
         path.clear();

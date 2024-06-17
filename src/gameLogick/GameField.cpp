@@ -57,9 +57,10 @@ void GameField::update(float dt) {
     dt *= timeSpeed;
 
     spawnTime += dt;
-    if (spawnTime > botSpawnTime) {
+    if (spawnTime > clientSpawnTime) {
         spawnTime = 0.f;
-        spawnBot();
+        if (bots.size() < maxClients)
+            spawnClient();
     }
     for (int i = 0; i < bots.size(); i++) {
         bots[i].update(dt, shopBG.getPosition(), grid);
@@ -78,7 +79,7 @@ void GameField::update(float dt) {
 
 void GameField::restartDay() {
     dropValues();
-    spawnBot();
+    spawnClient();
 }
 
 void GameField::dropValues() {
@@ -87,13 +88,37 @@ void GameField::dropValues() {
     income = 0;
 }
 
-void GameField::spawnBot() {
+void GameField::spawnClient() {
     visits++;
     int botSpeed = BOT_MIN_SPEED + rand() % 2;
     int botSkin = rand()%BOT_TEXTURES_CNT + 1;
     int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
     sf::Vector2i botSpawnPos = Tile::getGridPosition(spawnTiles[rand()%spawnTiles.size()].getPosition() - shopBG.getPosition());
-    bots.push_back(Bot(botSpawnPos, shopBG.getPosition(), botSkin, ordersCnt, botSpeed));
+    bots.push_back(Bot(botSpawnPos, shopBG.getPosition(), botSkin, ordersCnt, botSpeed, serveTime));
+}
+
+int GameField::getClientsCount() {
+    return visits;
+}
+
+int GameField::getIncome() {
+    return income;
+}
+
+float GameField::getDiscont() {
+    return discont;
+}
+
+int GameField::getMaxClients() {
+    return maxClients;
+}
+
+float GameField::getClientSpawnTime() {
+    return clientSpawnTime;
+}
+
+float GameField::getServeTime() {
+    return serveTime;
 }
 
 void GameField::setPosition(sf::Vector2f position) {
@@ -109,26 +134,22 @@ void GameField::setPosition(sf::Vector2f position) {
         bot.setPosition(bot.getPosition() + offset);
 }
 
-void GameField::setBotSpawnTime(float time) {
-    botSpawnTime = time;
-}
-
-int GameField::getVisits() {
-    return visits;
-}
-
-int GameField::getIncome() {
-    return income;
-}
-
-float GameField::getDiscont() {
-    return discont;
-}
-
 void GameField::setTimeSpeed(GameSpeed state) {
     timeSpeed = static_cast<float>(state);
 }
 
+void GameField::setClientSpawnTime(float clientSpawnTime) {
+    GameField::clientSpawnTime = clientSpawnTime;
+}
+
 void GameField::setDiscont(float discont) {
     GameField::discont = discont;
+}
+
+void GameField::setMaxClients(int maxClients) {
+    GameField::maxClients = maxClients;
+}
+
+void GameField::setServeTime(float serveTime) {
+    GameField::serveTime = serveTime;
 }

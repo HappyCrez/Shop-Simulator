@@ -10,20 +10,18 @@ ControlPanel::ControlPanel() {
     background.setFillColor(sf::Color(39,39,39, 125));
 
     labels.resize((int)Label::size);
-    labels[(int)Label::day_count    ] = createText({20.f, 20.f});
-    labels[(int)Label::day_time     ] = createText({300.f, 20.f});
-    labels[(int)Label::day_stats    ] = createText({20.f, 400.f});
-    labels[(int)Label::last_income  ] = createText({20.f, 460.f});
-    labels[(int)Label::today_income ] = createText({20.f, 60.f});
-    labels[(int)Label::last_visits  ] = createText({300.f, 460.f});
-    labels[(int)Label::today_visits ] = createText({20.f, 100.f});
-    labels[(int)Label::last_discont ] = createText({20.f, 490.f});
-    labels[(int)Label::today_discont] = createText({300.f, 60.f});
-    labels[(int)Label::next_discont ] = createText({20.f, 200.f});
-    labels[(int)Label::time_speed   ] = createText({20.f, 140.f});
+    labels[(int)Label::day_count    ] = {createText({20.f, 20.f}), "Day #", "", -1};
+    labels[(int)Label::day_time     ] = {createText({300.f, 20.f}), "Time: ", "", -1};
     
-    labels[(int)Label::time_speed   ].setString("Time speed");
-    labels[(int)Label::day_stats    ].setString("PREV DAY STATS");
+    labels[(int)Label::income ] = {createText({20.f, 60.f}), "Income: ", "", -1};
+    labels[(int)Label::clients ] = {createText({20.f, 100.f}), "Clients: ", "", -1};
+    
+    // Scroll bars labels
+    labels[(int)Label::time_speed        ] = {createText({20.f, 140.f}), "Time speed: ", "", -1};
+    labels[(int)Label::discont           ] = {createText({20.f, 240.f}), "Discont: ", "%", -1};
+    labels[(int)Label::clients_max_count ] = {createText({20.f, 340.f}), "Max client count: ", "", -1};
+    labels[(int)Label::clients_serve_time] = {createText({20.f, 440.f}), "Clients serve time: ", "s", -1};
+    labels[(int)Label::clients_spawn_time] = {createText({20.f, 540.f}), "Clients come time: ", "s", -1};
     
     gameSpeedState = GameSpeed::slow;
     GameField::setTimeSpeed(gameSpeedState);
@@ -35,9 +33,22 @@ ControlPanel::ControlPanel() {
     float discontVal = 0.f;
     GameField::setDiscont(discontVal);
     discontBar = ScrollBar(
-        sf::Vector2f(30.f, 250.f), {500.f, 20.f}, 25, (int)discontVal,
+        sf::Vector2f(30.f, 290.f), {500.f, 20.f}, 25, (int)discontVal,
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
-        ); 
+        );
+
+    maxClientsBar = ScrollBar(
+        sf::Vector2f(30.f, 390.f), {500.f, 20.f}, 25, 10,
+        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+        );
+    clientServeTimeBar = ScrollBar(
+        sf::Vector2f(30.f, 490.f), {500.f, 20.f}, 25, 10,
+        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+        );
+    clientSpawnTimeBar = ScrollBar(
+        sf::Vector2f(30.f, 590.f), {500.f, 20.f}, 25, 10,
+        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+        );
 
     btnBG = sf::Color::Black;
     btnHoverBG = sf::Color(10, 10, 10);
@@ -57,12 +68,15 @@ void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (!isVisible) return;
     target.draw(background);
     
-    for (sf::Text& label : labels)
-        target.draw(label);
+    for (LabelInfo& labelInfo : labels)
+        target.draw(labelInfo.label);
 
     // scrollbars
     target.draw(timeSpeedBar);
     target.draw(discontBar);
+    target.draw(maxClientsBar);
+    target.draw(clientServeTimeBar);
+    target.draw(clientSpawnTimeBar);
 }
 
 void ControlPanel::update(float dt) {
@@ -81,7 +95,7 @@ void ControlPanel::update(float dt) {
         }
         dayDialogTransparency(animationTime);
     } 
-    // Stop time then animation play
+    // Stop game time then animation play
     else {
         timeNow += dt;
     }
@@ -90,9 +104,48 @@ void ControlPanel::update(float dt) {
         timeNow = 0.f;
         newDay();
     }
-    updateDayTimeText(timeNow);
-    updateIncomeText(GameField::getIncome());
-    updateVisitsText(GameField::getVisits());
+
+    for (int i = 0; i < (int)Label::size; i++) {
+        LabelInfo& labelInfo = labels[i];
+        int curValue = -1;
+        switch((Label)i) {
+        case Label::day_count:
+            curValue = dayCount;
+            break;
+        case Label::day_time:
+            updateTimeText(timeNow);
+            curValue = -1;
+            break;
+        case Label::income:
+            curValue = GameField::getIncome();
+            break;
+        case Label::clients:
+            curValue = GameField::getClientsCount();
+            break;
+        case Label::discont:
+            curValue = discontBar.getStep() * discontStepVal;
+            GameField::setDiscont(discontBar.getStep()*discontStepVal/100.f);
+            break;
+        case Label::clients_max_count:
+            curValue = maxClientsBar.getStep() * maxClientsStepVal + minClientsCount;
+            GameField::setMaxClients(curValue);
+            break;
+        case Label::clients_serve_time:
+            curValue = clientServeTimeBar.getStep();
+            GameField::setServeTime(curValue);
+            break;
+        case Label::clients_spawn_time:
+            curValue = clientSpawnTimeBar.getStep();
+            GameField::setClientSpawnTime(curValue);
+            break;
+        case Label::time_speed:
+            curValue = timeSpeedBar.getStep();
+            GameField::setTimeSpeed((GameSpeed)curValue);
+            break;
+        }
+        if (curValue == -1 || labelInfo.prevValue == curValue) continue;
+        labelInfo.label.setString(labelInfo.before + std::to_string(curValue) + labelInfo.after);
+    }
 }
 
 void ControlPanel::render(sf::Event& event) {
@@ -120,27 +173,17 @@ void ControlPanel::render(sf::Event& event) {
     collapse.isInBounds(mouseCoord);
 
     timeSpeedBar.update(event);
-    gameSpeedState = (GameSpeed)timeSpeedBar.getStep();
-    GameField::setTimeSpeed(gameSpeedState);
-
     discontBar.update(event);
-    updateNextDayDiscontText(discontBar.getStep()*discontStep);
+    maxClientsBar.update(event);
+    clientServeTimeBar.update(event);
+    clientSpawnTimeBar.update(event);
 }
 
 void ControlPanel::newDay() {
     dayDialogVisible = true;
     dayCount++;
     dayDialog.setString("Day #" + std::to_string(dayCount));
-    labels[(int)Label::day_count].setString("Day #" + std::to_string(dayCount));
-
-    updateLastDiscontText(GameField::getDiscont());
-    updateLastIncomeText(GameField::getIncome());
-    updateLastVisitsText(GameField::getVisits());
     GameField::restartDay();
- 
-    int discont = discontBar.getStep()*discontStep;
-    updateDiscontText(discont);
-    GameField::setDiscont(discont/100.f);
 }
 
 void ControlPanel::restartGame() {
@@ -209,59 +252,18 @@ sf::Text ControlPanel::createText(sf::Vector2f position) {
     return text;
 }
 
-//
-//  Update every frame
-//
-void ControlPanel::updateDayTimeText(float time) {
-    int hours = static_cast<int>(time/60.f) + SHOP_OPEN_TIME;
+void ControlPanel::updateTimeText(float time) {
+    LabelInfo& labelInfo = labels[(int)Label::day_time];
+    
+    // if minutes don't changed time is the same -> don't update it
     int minutes = static_cast<int>(time) % 60;
+    if (labelInfo.prevValue == minutes) return;
+
+    labelInfo.prevValue = minutes;
+    int hours = static_cast<int>(time/60.f) + SHOP_OPEN_TIME;
     std::string hoursStr = hours > 9 ? std::to_string(hours) : "0" + std::to_string(hours);
     std::string minutesStr = minutes > 9 ? std::to_string(minutes) : "0" + std::to_string(minutes);
-    labels[(int)Label::day_time].setString("Time " + hoursStr + "h " + minutesStr + "m");
-}
-
-void ControlPanel::updateNextDayDiscontText(int discont) {
-    static int prevDiscont = -1;
-    if (prevDiscont == discont) return;
-    labels[(int)Label::next_discont].setString("Next day discont: " + std::to_string(discont) + "%");
-    prevDiscont = discont;
-}
-
-void ControlPanel::updateIncomeText(int income) {
-    static int prevIncome = -1;
-    if (prevIncome == income) return;
-    labels[(int)Label::today_income].setString("Shop income: " + std::to_string(income));
-    prevIncome = income;
-}
-
-void ControlPanel::updateVisitsText(int visits) {
-    static int prevVisits = -1;
-    if (prevVisits == visits) return;
-    labels[(int)Label::today_visits].setString("Clients count: " + std::to_string(visits));
-    prevVisits = visits;
-}
-
-//
-//  Update ever game day
-//
-void ControlPanel::updateDiscontText(int discont) {
-    labels[(int)Label::today_discont].setString("Today discont: " + std::to_string(discont) + "%");
-}
-
-void ControlPanel::updateLastDiscontText(int discont) {
-    labels[(int)Label::last_discont].setString("Last discont: " + std::to_string(discont) + "%");
-}
-
-void ControlPanel::updateLastIncomeText(int income) {
-    labels[(int)Label::last_income].setString("Last income: " + std::to_string(income));
-}
-
-void ControlPanel::updateLastVisitsText(int visits) {
-    labels[(int)Label::last_visits].setString("Last clients count: " + std::to_string(visits));
-}
-
-void ControlPanel::updateDayText() {
-    labels[(int)Label::day_count].setString("Day #: " + std::to_string(dayCount));
+    labelInfo.label.setString(labelInfo.before + hoursStr + "h " + minutesStr + "m");
 }
 
 //

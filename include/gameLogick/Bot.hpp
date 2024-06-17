@@ -9,7 +9,7 @@
 
 class Bot : public sf::Drawable {
     float movementSpeed;
-    float waitSpeed;
+    float serveTime;
     int textureNum;
     int money;
     BotState state;
@@ -38,7 +38,7 @@ class Bot : public sf::Drawable {
 
 public:
     Bot(int textureNum, int ordersCnt, float movementSpeed);
-    Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed);
+    Bot(sf::Vector2i position, sf::Vector2f offset, int textureNum, int ordersCnt, float movementSpeed, float serveTime);
     
     void update(float dt, sf::Vector2f offset, std::vector<std::vector<Tile>>& grid);
 
