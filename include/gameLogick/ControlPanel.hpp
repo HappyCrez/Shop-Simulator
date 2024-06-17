@@ -18,12 +18,14 @@ enum class Label {
     time_speed, size};
 
 class ControlPanel : public sf::Drawable {
-    inline static sf::RectangleShape bg {{860, 1080}};
+    inline static sf::RectangleShape background {{860.f, 1080.f}};
     inline static std::vector<sf::Text> labels;
     inline static bool isVisible;
     inline static sf::Vector2f panelSize;
 
     inline static Button collapse;
+    inline static Button dayDialog;
+    inline static bool dayDialogVisible;
 
     // values
     inline static float lastDiscont = 0.f;
@@ -68,11 +70,12 @@ class ControlPanel : public sf::Drawable {
     static void updateCollapseButton();
     static void onHover(Button& btn);
     static void dropHover(Button& btn);
+    static void dayDialogTransparency(float time);
     
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-    static void show();
-    static void hide();
+    static void showPanel();
+    static void hidePanel();
 
     ControlPanel();
     ControlPanel( const ControlPanel& );  
@@ -80,8 +83,7 @@ class ControlPanel : public sf::Drawable {
 public:
     static ControlPanel& getInstance();
 
-    static void setPosition(sf::Vector2f position);
-    static void setSize(sf::Vector2f size);
+    static void initialize(sf::Vector2f wndSize);
 
     static void render(sf::Event& event);
     static void update(float dt);

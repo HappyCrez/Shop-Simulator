@@ -8,7 +8,8 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
 
     sf::Vector2f center = sf::Vector2f((wnd.getSize() - sf::Vector2u(WORLD_WIDTH*TILE_SIZE, WORLD_HEIGHT*TILE_SIZE)) / 2u);
     gameField.setPosition(center);
-
+    
+    panel.initialize(wndSize);
     resize(wndSize);
 }
 
@@ -28,7 +29,6 @@ void GameScreen::render(sf::Event& event) {
 }
 
 void GameScreen::resize(sf::Vector2f wndSize) {
-    panel.setSize({wndSize.x/2.f, wndSize.y});
     // TODO::View port
     // TODO::Position of control panel
 }

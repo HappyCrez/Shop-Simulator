@@ -41,6 +41,7 @@ void GameField::createTiles() {
 
 void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(shopBG);
+
     /*  =====DEBUG======
         TODO::Delete
     for (std::vector<Tile> &vec : grid)
@@ -64,7 +65,8 @@ void GameField::update(float dt) {
         bots[i].update(dt, shopBG.getPosition(), grid);
         
         // add money then bot pay
-        income += (bots[i].pay() - bots[i].pay() * discont);
+        int payCheck = bots[i].pay();
+        income += (payCheck - payCheck*discont);// count discont from check
 
         // delete bot then it leave
         if (bots[i].isLeaved()) {
@@ -75,10 +77,14 @@ void GameField::update(float dt) {
 }
 
 void GameField::restartDay() {
+    dropValues();
+    spawnBot();
+}
+
+void GameField::dropValues() {
     bots.clear();
     visits = 0;
     income = 0;
-    spawnBot();
 }
 
 void GameField::spawnBot() {

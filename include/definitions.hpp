@@ -12,7 +12,8 @@ enum class Tiles {
 };
 enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 
-#define DAY_WORK_TIME           600.f
+#define DAY_WORK_TIME           600.f   // 10 minutes
+#define DAY_CHANGE_ANIMATION    5.f    // 10 seconds
 #define SHOP_OPEN_TIME          9
 
 // Tiles types

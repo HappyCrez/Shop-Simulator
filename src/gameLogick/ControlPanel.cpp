@@ -7,37 +7,35 @@ ControlPanel& ControlPanel::getInstance() {
 }
 
 ControlPanel::ControlPanel() {
-    bg.setFillColor(sf::Color(39,39,39, 125));
-
-    collapse = createButton();
+    background.setFillColor(sf::Color(39,39,39, 125));
 
     labels.resize((int)Label::size);
-    labels[(int)Label::day_count    ] = createText({100.f, 20.f});
-    labels[(int)Label::day_time     ] = createText({400.f, 20.f});
-    labels[(int)Label::day_stats    ] = createText({100.f, 400.f});
-    labels[(int)Label::last_income  ] = createText({100.f, 460.f});
-    labels[(int)Label::today_income ] = createText({100.f, 60.f});
-    labels[(int)Label::last_visits  ] = createText({400.f, 460.f});
-    labels[(int)Label::today_visits ] = createText({100.f, 100.f});
-    labels[(int)Label::last_discont ] = createText({100.f, 490.f});
-    labels[(int)Label::today_discont] = createText({400.f, 60.f});
-    labels[(int)Label::next_discont ] = createText({100.f, 200.f});
-    labels[(int)Label::time_speed   ] = createText({100.f, 140.f});
-
+    labels[(int)Label::day_count    ] = createText({20.f, 20.f});
+    labels[(int)Label::day_time     ] = createText({300.f, 20.f});
+    labels[(int)Label::day_stats    ] = createText({20.f, 400.f});
+    labels[(int)Label::last_income  ] = createText({20.f, 460.f});
+    labels[(int)Label::today_income ] = createText({20.f, 60.f});
+    labels[(int)Label::last_visits  ] = createText({300.f, 460.f});
+    labels[(int)Label::today_visits ] = createText({20.f, 100.f});
+    labels[(int)Label::last_discont ] = createText({20.f, 490.f});
+    labels[(int)Label::today_discont] = createText({300.f, 60.f});
+    labels[(int)Label::next_discont ] = createText({20.f, 200.f});
+    labels[(int)Label::time_speed   ] = createText({20.f, 140.f});
+    
     labels[(int)Label::time_speed   ].setString("Time speed");
     labels[(int)Label::day_stats    ].setString("PREV DAY STATS");
     
     gameSpeedState = GameSpeed::slow;
     GameField::setTimeSpeed(gameSpeedState);
     timeSpeedBar = ScrollBar(
-        bg.getPosition() + sf::Vector2f(110.f, 190.f), {200.f, 20.f}, (int)GameSpeed::size, (int)gameSpeedState,
+        sf::Vector2f(30.f, 190.f), {200.f, 20.f}, (int)GameSpeed::size, (int)gameSpeedState,
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         );
 
     float discontVal = 0.f;
     GameField::setDiscont(discontVal);
     discontBar = ScrollBar(
-        bg.getPosition() + sf::Vector2f(110.f, 250.f), {600.f, 20.f}, 25, (int)discontVal,
+        sf::Vector2f(30.f, 250.f), {500.f, 20.f}, 25, (int)discontVal,
         sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         ); 
 
@@ -45,16 +43,19 @@ ControlPanel::ControlPanel() {
     btnHoverBG = sf::Color(10, 10, 10);
     outlineColor = sf::Color(255, 255, 255);
 
-    restartGame();
-    setPosition({0, 0});
-    show();
+    collapse = createButton();
+    dayDialog = createButton();
+
+    showPanel();
 }
 
 void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(collapse);
 
+    target.draw(dayDialog);
+
     if (!isVisible) return;
-    target.draw(bg);
+    target.draw(background);
     
     for (sf::Text& label : labels)
         target.draw(label);
@@ -65,15 +66,32 @@ void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 void ControlPanel::update(float dt) {
+    static float animationTime = 0;
+    static bool dayState = false;
+
     dt *= (int)gameSpeedState;
-    timeNow += dt;
+
+    // Day change animation
+    if (dayDialogVisible) {
+        animationTime += dt;
+        
+        if (animationTime > DAY_CHANGE_ANIMATION) {
+            animationTime = 0.f;
+            dayDialogVisible = false;
+        }
+        dayDialogTransparency(animationTime);
+    } 
+    // Stop time then animation play
+    else {
+        timeNow += dt;
+    }
+
     if (timeNow >= DAY_WORK_TIME) {
         timeNow = 0.f;
         newDay();
     }
-    updateIncomeText(GameField::getIncome());
-    updateNextDayDiscontText(discontBar.getStep()*discontStep);
     updateDayTimeText(timeNow);
+    updateIncomeText(GameField::getIncome());
     updateVisitsText(GameField::getVisits());
 }
 
@@ -85,8 +103,8 @@ void ControlPanel::render(sf::Event& event) {
         if (event.mouseButton.button != sf::Mouse::Left) return;
         mouseCoord = {event.mouseButton.x, event.mouseButton.y};
         if (collapse.isInBounds(mouseCoord) ) {
-            if (isVisible) hide();
-            else show();
+            if (isVisible) hidePanel();
+            else showPanel();
         }
         break;
     case sf::Event::MouseMoved:
@@ -106,10 +124,13 @@ void ControlPanel::render(sf::Event& event) {
     GameField::setTimeSpeed(gameSpeedState);
 
     discontBar.update(event);
+    updateNextDayDiscontText(discontBar.getStep()*discontStep);
 }
 
 void ControlPanel::newDay() {
+    dayDialogVisible = true;
     dayCount++;
+    dayDialog.setString("Day #" + std::to_string(dayCount));
     labels[(int)Label::day_count].setString("Day #" + std::to_string(dayCount));
 
     updateLastDiscontText(GameField::getDiscont());
@@ -117,34 +138,35 @@ void ControlPanel::newDay() {
     updateLastVisitsText(GameField::getVisits());
     GameField::restartDay();
  
-    float discont = discontBar.getStep()/100.f*discontStep;
-    GameField::setDiscont(discont);
+    int discont = discontBar.getStep()*discontStep;
     updateDiscontText(discont);
+    GameField::setDiscont(discont/100.f);
 }
 
 void ControlPanel::restartGame() {
     dayCount = 0;
     timeNow = 0.f;
     discontBar.setStep(0); // set discont to zero
+    GameField::dropValues();
     newDay();
 }
 
-void ControlPanel::show() {
+void ControlPanel::showPanel() {
     isVisible = true;
-    bg.setSize(panelSize);
+    background.setSize(panelSize);
     updateCollapseButton();
     collapse.setString("hide");
 }
 
-void ControlPanel::hide() {
+void ControlPanel::hidePanel() {
     isVisible = false;
-    bg.setSize({0, 0});
+    background.setSize({0, 0});
     updateCollapseButton();
     collapse.setString("show");
 }
 
 void ControlPanel::updateCollapseButton() {
-    collapse.setPosition({bg.getPosition().x + bg.getSize().x + 2, 2});
+    collapse.setPosition({background.getPosition().x + background.getSize().x + 2, 2});
 }
 
 //
@@ -168,12 +190,21 @@ void ControlPanel::dropHover(Button& btn) {
     btn.setOutline(outlineSize, outlineColor);
 }
 
+void ControlPanel::dayDialogTransparency(float time) {
+    if (time > DAY_CHANGE_ANIMATION/2.f) time = std::abs(DAY_CHANGE_ANIMATION - time);
+    sf::Uint8 transparency = static_cast<int>(time*(255.f/DAY_CHANGE_ANIMATION * 2.f)) % 255; 
+
+    dayDialog.setOutline(outlineSize, {255, 255, 255, transparency});
+    dayDialog.setBGColor({btnBG.r, btnBG.b, btnBG.g, transparency});
+    dayDialog.setTextColor({255, 255, 255, transparency});
+}
+
 //
 //  Text funcs
 //
 sf::Text ControlPanel::createText(sf::Vector2f position) {
     sf::Text text("", AssetsManager::loadFont(BLAZMA_FONT), 24);
-    text.setPosition(bg.getPosition() + position);
+    text.setPosition(background.getPosition() + position);
     text.setFillColor(sf::Color::White);
     return text;
 }
@@ -236,18 +267,14 @@ void ControlPanel::updateDayText() {
 //
 //  Setters
 //
-void ControlPanel::setPosition(sf::Vector2f position) {
-    sf::Vector2f offset = position - bg.getPosition();
-    bg.setPosition(position);
-    for (sf::Text& label : labels)
-        label.setPosition(label.getPosition() + offset);
-    timeSpeedBar.setPosition(timeSpeedBar.getPosition() + offset);
-    discontBar.setPosition(discontBar.getPosition() + offset);
-}
+void ControlPanel::initialize(sf::Vector2f wndSize) {
+    background.setPosition({0, 0});
+    panelSize = {wndSize.x / 3.f, wndSize.y};
 
-void ControlPanel::setSize(sf::Vector2f size) {
-    panelSize = size;
-    // update panel size
-    if (isVisible) show();
-    else hide();
+    dayDialogVisible = false;
+    sf::Vector2f dialogSize(wndSize / 5.f);
+    dayDialog.setPosition((wndSize - dialogSize) / 2.f);
+    dayDialog.setSize(dialogSize);
+    dayDialogTransparency(0.f);
+    showPanel();// update panel size
 }

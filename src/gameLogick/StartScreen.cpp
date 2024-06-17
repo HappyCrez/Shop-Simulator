@@ -26,6 +26,7 @@ Button StartScreen::createButton(sf::Vector2f size, std::string label) {
 }
 
 void StartScreen::render(sf::Event& event) {
+    static bool gameIsStarted = false;
     sf::Vector2i mouseCoord;
     switch (event.type) {
     case sf::Event::MouseMoved:
@@ -37,10 +38,14 @@ void StartScreen::render(sf::Event& event) {
         break;
     case sf::Event::MouseButtonPressed:
         mouseCoord = {event.mouseButton.x, event.mouseButton.y};
-        if      (btns[(int)Btns::load     ].isInBounds(mouseCoord)) { screenState = Screens::game; }
+        if      (btns[(int)Btns::load     ].isInBounds(mouseCoord) && gameIsStarted) { screenState = Screens::game; }
         else if (btns[(int)Btns::settings ].isInBounds(mouseCoord)) { screenState = Screens::settings; }
-        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) { screenState = Screens::game; ControlPanel::restartGame(); }
         else if (btns[(int)Btns::exit     ].isInBounds(mouseCoord)) { wnd.close(); }
+        else if (btns[(int)Btns::startGame].isInBounds(mouseCoord)) {
+            screenState = Screens::game;
+            gameIsStarted = true;
+            ControlPanel::restartGame();
+            }
         break;
     }
 }
