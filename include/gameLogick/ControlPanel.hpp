@@ -10,14 +10,20 @@
 #include "UI/ScrollBar.hpp"
 #include "loaders/AssetsManager.hpp"
 
-enum class Label {
+enum class LabelType {
     day_count, day_time,
     income, clients, discont,
     clients_max_count, clients_serve_time, clients_spawn_time,
-    time_speed, size};
+    time_speed, size
+    };
 
-struct LabelInfo {
-    sf::Text label;
+enum class ScrollBarType {
+    timeSpeed, discont,
+    maxClients, clientServeTime, clientSpawnTime, size
+    };
+
+struct Label {
+    sf::Text text;
     std::string before;
     std::string after;
     int prevValue;
@@ -25,22 +31,20 @@ struct LabelInfo {
 
 class ControlPanel : public sf::Drawable {
     inline static sf::RectangleShape background {{860.f, 1080.f}};
-    inline static std::vector<LabelInfo> labels;
+    inline static std::vector<Label> labels;
+    inline static std::vector<ScrollBar> scrollBars;
     inline static bool isVisible;
     inline static sf::Vector2f panelSize;
 
     inline static float timeNow = 0.f;
     inline static int dayCount = 0;
     
-    inline static ScrollBar timeSpeedBar;
-    inline static ScrollBar discontBar;
-    inline static ScrollBar maxClientsBar;
-    inline static ScrollBar clientServeTimeBar;
-    inline static ScrollBar clientSpawnTimeBar;
     inline static int discontStepVal = 4;
     inline static int maxClientsStepVal = 2;
     inline static int minClientsCount = 2;
-    inline static GameSpeed gameSpeedState;
+    inline static int minServeTime = 1;
+    inline static int minSpawnTime = 1;
+    inline static GameSpeed gameSpeedState = GameSpeed::slow;
 
     inline static Button collapse;
     inline static Button dayDialog;

@@ -225,7 +225,7 @@ void Bot::onTheDestProceed(float dt, Tiles purpose) {
             money += ((int)purpose + 1) * 4;
         }
     }
-    waitBar.setSize({timeOnTarget, BOT_WAIT_BAR_HEIGHT});
+    waitBar.setSize({timeOnTarget * BOT_WAIT_BAR_WIDTH_COEF, BOT_WAIT_BAR_HEIGHT});
 }
 
 void Bot::setPosition(sf::Vector2f pos) {

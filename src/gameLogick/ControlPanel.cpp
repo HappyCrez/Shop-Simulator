@@ -9,46 +9,34 @@ ControlPanel& ControlPanel::getInstance() {
 ControlPanel::ControlPanel() {
     background.setFillColor(sf::Color(39,39,39, 125));
 
-    labels.resize((int)Label::size);
-    labels[(int)Label::day_count    ] = {createText({20.f, 20.f}), "Day #", "", -1};
-    labels[(int)Label::day_time     ] = {createText({300.f, 20.f}), "Time: ", "", -1};
+    labels.resize((int)LabelType::size);
+    labels[(int)LabelType::day_count] = {createText({20.f, 20.f}), "Day #"  , "", -1};
+    labels[(int)LabelType::day_time ] = {createText({300.f, 20.f}), "Time: ", "", -1};
     
-    labels[(int)Label::income ] = {createText({20.f, 60.f}), "Income: ", "", -1};
-    labels[(int)Label::clients ] = {createText({20.f, 100.f}), "Clients: ", "", -1};
+    labels[(int)LabelType::income ] = {createText({20.f, 60.f}), "Income: "  , "", -1};
+    labels[(int)LabelType::clients] = {createText({20.f, 100.f}), "Clients: ", "", -1};
     
     // Scroll bars labels
-    labels[(int)Label::time_speed        ] = {createText({20.f, 140.f}), "Time speed: ", "", -1};
-    labels[(int)Label::discont           ] = {createText({20.f, 240.f}), "Discont: ", "%", -1};
-    labels[(int)Label::clients_max_count ] = {createText({20.f, 340.f}), "Max client count: ", "", -1};
-    labels[(int)Label::clients_serve_time] = {createText({20.f, 440.f}), "Clients serve time: ", "s", -1};
-    labels[(int)Label::clients_spawn_time] = {createText({20.f, 540.f}), "Clients come time: ", "s", -1};
-    
-    gameSpeedState = GameSpeed::slow;
-    GameField::setTimeSpeed(gameSpeedState);
-    timeSpeedBar = ScrollBar(
-        sf::Vector2f(30.f, 190.f), {200.f, 20.f}, (int)GameSpeed::size, (int)gameSpeedState,
-        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
-        );
+    labels[(int)LabelType::time_speed        ] = {createText({20.f, 140.f}), "Time speed: " , "" , -1};
+    labels[(int)LabelType::discont           ] = {createText({20.f, 240.f}), "Discont: "    , "%", -1};
+    labels[(int)LabelType::clients_max_count ] = {createText({20.f, 340.f}), "Max client count: "  , "" , -1};
+    labels[(int)LabelType::clients_serve_time] = {createText({20.f, 440.f}), "Clients serve time: ", "s", -1};
+    labels[(int)LabelType::clients_spawn_time] = {createText({20.f, 540.f}), "Clients come time: " , "s", -1};
 
-    float discontVal = 0.f;
-    GameField::setDiscont(discontVal);
-    discontBar = ScrollBar(
-        sf::Vector2f(30.f, 290.f), {500.f, 20.f}, 25, (int)discontVal,
-        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
-        );
+    scrollBars.resize((int)ScrollBarType::size);
+    for (int i = 0; i < (int)ScrollBarType::size; i++) {
+        int stepsCount = 25;
+        sf::Vector2f barSize (500.f, 20.f);
+        if (i == (int)ScrollBarType::timeSpeed) {
+            stepsCount = (int)GameSpeed::size;
+            barSize.x = 150.f;
+        }
 
-    maxClientsBar = ScrollBar(
-        sf::Vector2f(30.f, 390.f), {500.f, 20.f}, 25, 10,
-        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+        scrollBars[i] = ScrollBar(
+            sf::Vector2f(30.f, i*100.f + 190.f), barSize, stepsCount, 0,
+            sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
         );
-    clientServeTimeBar = ScrollBar(
-        sf::Vector2f(30.f, 490.f), {500.f, 20.f}, 25, 10,
-        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
-        );
-    clientSpawnTimeBar = ScrollBar(
-        sf::Vector2f(30.f, 590.f), {500.f, 20.f}, 25, 10,
-        sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
-        );
+    }
 
     btnBG = sf::Color::Black;
     btnHoverBG = sf::Color(10, 10, 10);
@@ -68,15 +56,11 @@ void ControlPanel::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (!isVisible) return;
     target.draw(background);
     
-    for (LabelInfo& labelInfo : labels)
-        target.draw(labelInfo.label);
+    for (Label& label : labels)
+        target.draw(label.text);
 
-    // scrollbars
-    target.draw(timeSpeedBar);
-    target.draw(discontBar);
-    target.draw(maxClientsBar);
-    target.draw(clientServeTimeBar);
-    target.draw(clientSpawnTimeBar);
+    for (ScrollBar& scrollBar : scrollBars)
+        target.draw(scrollBar);
 }
 
 void ControlPanel::update(float dt) {
@@ -105,46 +89,49 @@ void ControlPanel::update(float dt) {
         newDay();
     }
 
-    for (int i = 0; i < (int)Label::size; i++) {
-        LabelInfo& labelInfo = labels[i];
+    for (int i = 0; i < (int)LabelType::size; i++) {
         int curValue = -1;
-        switch((Label)i) {
-        case Label::day_count:
+        switch((LabelType)i) {
+        case LabelType::day_count:
             curValue = dayCount;
             break;
-        case Label::day_time:
+        case LabelType::day_time:
             updateTimeText(timeNow);
             curValue = -1;
             break;
-        case Label::income:
+        case LabelType::income:
             curValue = GameField::getIncome();
             break;
-        case Label::clients:
+        case LabelType::clients:
             curValue = GameField::getClientsCount();
             break;
-        case Label::discont:
-            curValue = discontBar.getStep() * discontStepVal;
-            GameField::setDiscont(discontBar.getStep()*discontStepVal/100.f);
+        case LabelType::discont:
+            curValue = scrollBars[(int)ScrollBarType::discont].getStep() * discontStepVal;
+            GameField::setDiscont(static_cast<float>(curValue)/100.f);
             break;
-        case Label::clients_max_count:
-            curValue = maxClientsBar.getStep() * maxClientsStepVal + minClientsCount;
+        case LabelType::clients_max_count:
+            curValue = scrollBars[(int)ScrollBarType::maxClients].getStep() * maxClientsStepVal + minClientsCount;
             GameField::setMaxClients(curValue);
             break;
-        case Label::clients_serve_time:
-            curValue = clientServeTimeBar.getStep();
+        case LabelType::clients_serve_time:
+            curValue = scrollBars[(int)ScrollBarType::clientServeTime].getStep() + minServeTime;
             GameField::setServeTime(curValue);
             break;
-        case Label::clients_spawn_time:
-            curValue = clientSpawnTimeBar.getStep();
+        case LabelType::clients_spawn_time: 
+            curValue = scrollBars[(int)ScrollBarType::clientSpawnTime].getStep() + minSpawnTime +
+                (100 - labels[(int)LabelType::discont].prevValue) / 5 / discontStepVal ; // attractive depend of discont value
             GameField::setClientSpawnTime(curValue);
             break;
-        case Label::time_speed:
-            curValue = timeSpeedBar.getStep();
+        case LabelType::time_speed:
+            curValue = scrollBars[(int)ScrollBarType::timeSpeed].getStep();
+            gameSpeedState = (GameSpeed)curValue;
             GameField::setTimeSpeed((GameSpeed)curValue);
             break;
         }
-        if (curValue == -1 || labelInfo.prevValue == curValue) continue;
-        labelInfo.label.setString(labelInfo.before + std::to_string(curValue) + labelInfo.after);
+        Label& label = labels[i];
+        if (curValue == -1 || label.prevValue == curValue) continue;
+        label.prevValue = curValue;
+        label.text.setString(label.before + std::to_string(curValue) + label.after);
     }
 }
 
@@ -170,13 +157,9 @@ void ControlPanel::render(sf::Event& event) {
         }
         break;
     }
-    collapse.isInBounds(mouseCoord);
 
-    timeSpeedBar.update(event);
-    discontBar.update(event);
-    maxClientsBar.update(event);
-    clientServeTimeBar.update(event);
-    clientSpawnTimeBar.update(event);
+    for (ScrollBar& scrollBar : scrollBars)
+        scrollBar.update(event);
 }
 
 void ControlPanel::newDay() {
@@ -189,7 +172,8 @@ void ControlPanel::newDay() {
 void ControlPanel::restartGame() {
     dayCount = 0;
     timeNow = 0.f;
-    discontBar.setStep(0); // set discont to zero
+    for (ScrollBar& scrollBar : scrollBars)
+        scrollBar.setStep(0); // drop all params
     GameField::dropValues();
     newDay();
 }
@@ -253,17 +237,17 @@ sf::Text ControlPanel::createText(sf::Vector2f position) {
 }
 
 void ControlPanel::updateTimeText(float time) {
-    LabelInfo& labelInfo = labels[(int)Label::day_time];
+    Label& label = labels[(int)LabelType::day_time];
     
     // if minutes don't changed time is the same -> don't update it
     int minutes = static_cast<int>(time) % 60;
-    if (labelInfo.prevValue == minutes) return;
+    if (label.prevValue == minutes) return;
 
-    labelInfo.prevValue = minutes;
+    label.prevValue = minutes;
     int hours = static_cast<int>(time/60.f) + SHOP_OPEN_TIME;
     std::string hoursStr = hours > 9 ? std::to_string(hours) : "0" + std::to_string(hours);
     std::string minutesStr = minutes > 9 ? std::to_string(minutes) : "0" + std::to_string(minutes);
-    labelInfo.label.setString(labelInfo.before + hoursStr + "h " + minutesStr + "m");
+    label.text.setString(label.before + hoursStr + "h " + minutesStr + "m");
 }
 
 //
