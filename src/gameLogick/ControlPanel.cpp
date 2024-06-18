@@ -34,7 +34,7 @@ ControlPanel::ControlPanel() {
 
         scrollBars[i] = ScrollBar(
             sf::Vector2f(30.f, i*100.f + 190.f), barSize, stepsCount, 0,
-            sf::Color::Transparent, sf::Color::White, 1, sf::Color::White, sf::Color::White
+            sf::Color::Transparent, sf::Color::Black, 1.f, sf::Color::White, sf::Color::Transparent
         );
     }
 
@@ -115,12 +115,12 @@ void ControlPanel::update(float dt) {
             break;
         case LabelType::clients_serve_time:
             curValue = scrollBars[(int)ScrollBarType::clientServeTime].getStep() + minServeTime;
-            GameField::setServeTime(curValue);
+            GameField::setServeTime(static_cast<float>(curValue));
             break;
         case LabelType::clients_spawn_time: 
             curValue = scrollBars[(int)ScrollBarType::clientSpawnTime].getStep() + minSpawnTime +
                 (100 - labels[(int)LabelType::discont].prevValue) / 5 / discontStepVal ; // attractive depend of discont value
-            GameField::setClientSpawnTime(curValue);
+            GameField::setClientSpawnTime(static_cast<float>(curValue));
             break;
         case LabelType::time_speed:
             curValue = scrollBars[(int)ScrollBarType::timeSpeed].getStep();

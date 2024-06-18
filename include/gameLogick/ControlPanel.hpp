@@ -53,8 +53,8 @@ class ControlPanel : public sf::Drawable {
     inline static sf::Color btnBG;
     inline static sf::Color btnHoverBG;
     inline static sf::Color outlineColor;
-    inline static int outlineSize = 1;
-    inline static int outlineHoverSize = 2;
+    inline static float outlineSize = 1.f;
+    inline static float outlineHoverSize = 2.f;
 
     // Texts funcs
     static sf::Text createText(sf::Vector2f position);

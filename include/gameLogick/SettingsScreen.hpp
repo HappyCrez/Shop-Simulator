@@ -16,8 +16,8 @@ class SettingsScreen : public Screen {
     sf::Color btnBG;
     sf::Color hoverBG;
     sf::Color outlineColor;
-    int outlineSize = 1;
-    int outlineHoverSize = 2;
+    float outlineSize = 1.f;
+    float outlineHoverSize = 2.f;
 
     sf::Text soundLabel;
     ScrollBar soundVolume;

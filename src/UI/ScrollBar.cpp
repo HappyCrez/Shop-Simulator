@@ -4,7 +4,7 @@ ScrollBar::ScrollBar() { }
 
 ScrollBar::ScrollBar(
     sf::Vector2f position, sf::Vector2f size, int stepCount, int stepIdx, sf::Color boxClr, sf::Color thumbClr,
-    int outlineThickness, sf::Color boxOutlineClr, sf::Color thumbOutlineClr)
+    float outlineThickness, sf::Color boxOutlineClr, sf::Color thumbOutlineClr)
 {
     this->stepCount = stepCount;
     this->stepIdx = stepIdx;

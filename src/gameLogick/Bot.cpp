@@ -156,7 +156,7 @@ void Bot::moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std
 void Bot::moveDirection(BotTurn turn, float dt) {
     switch (turn) {
     case BotTurn::down:
-        sprite.move(sf::Vector2f(0.f, 1.f) * movementSpeed * dt);
+        sprite.move(sf::Vector2f(0.f, 1.f)  * movementSpeed * dt);
         break;
     case BotTurn::up:
         sprite.move(sf::Vector2f(0.f, -1.f) * movementSpeed * dt);
@@ -165,7 +165,7 @@ void Bot::moveDirection(BotTurn turn, float dt) {
         sprite.move(sf::Vector2f(-1.f, 0.f) * movementSpeed * dt);
         break;
     case BotTurn::right:
-        sprite.move(sf::Vector2f(1.f, 0.f) * movementSpeed * dt);
+        sprite.move(sf::Vector2f(1.f, 0.f)  * movementSpeed * dt);
         break;
     }
 }

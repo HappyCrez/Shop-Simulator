@@ -23,8 +23,8 @@ SettingsScreen::SettingsScreen(sf::RenderWindow &wnd, Screens& screenState) : Sc
     soundLabel.setCharacterSize(24);
     soundLabel.setFont(AssetsManager::loadFont(BLAZMA_FONT));
     soundLabel.setPosition({center.x - scrollBarSize.x/2.f, center.y - 60.f});
-    soundVolume = ScrollBar({center.x - scrollBarSize.x/2.f + 10.f, center.y}, scrollBarSize, 101, 51, sf::Color::Transparent, sf::Color::Black,
-        1, sf::Color::White, sf::Color::Transparent);
+    soundVolume = ScrollBar({center.x - scrollBarSize.x/2.f + 10.f, center.y}, scrollBarSize, 101, 51,
+        sf::Color::Transparent, sf::Color::Black, 1.f, sf::Color::White, sf::Color::Transparent);
     
     resize(wndSize);
 }

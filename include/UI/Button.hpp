@@ -28,7 +28,7 @@ public:
     void setPosition(sf::Vector2f size);
     void setBGTexture(sf::Texture* texture);
     void setBGColor(sf::Color color);
-    void setOutline(int size, sf::Color color);
+    void setOutline(float size, sf::Color color);
     
     // Label
     void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, Align align, sf::Text::Style style);

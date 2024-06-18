@@ -24,7 +24,7 @@ public:
     ScrollBar();
     ScrollBar(
         sf::Vector2f position, sf::Vector2f size, int steps, int curStep, sf::Color boxClr, sf::Color thumbClr,
-        int outlineThickness, sf::Color boxOutlineClr, sf::Color thumbOutlineClr
+        float outlineThickness, sf::Color boxOutlineClr, sf::Color thumbOutlineClr
         );
     void update(sf::Event& event);
     void updateThumbPosition();

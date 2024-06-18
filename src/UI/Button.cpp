@@ -48,7 +48,7 @@ void Button::setBGColor(sf::Color color) {
     rect.setFillColor(color);
 }
 
-void Button::setOutline(int size, sf::Color color) {
+void Button::setOutline(float size, sf::Color color) {
     rect.setOutlineThickness(size);
     rect.setOutlineColor(color);
 }

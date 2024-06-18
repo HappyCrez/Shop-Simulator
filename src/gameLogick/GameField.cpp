@@ -60,8 +60,8 @@ void GameField::update(float dt) {
         bots[i].update(dt, shopBG.getPosition(), grid);
         
         // add money then bot pay
-        int payCheck = bots[i].pay();
-        income += (payCheck - payCheck*discont);// count discont from check
+        float payCheck = static_cast<float>(bots[i].pay());
+        income += static_cast<int>(payCheck - payCheck*discont);// count discont from check
 
         // delete bot then it leave
         if (bots[i].isLeaved()) {
@@ -84,7 +84,7 @@ void GameField::dropValues() {
 
 void GameField::spawnClient() {
     visits++;
-    int botSpeed = BOT_MIN_SPEED + rand() % 2;
+    float botSpeed = static_cast<float>(BOT_MIN_SPEED + rand() % 2);
     int botSkin = rand()%BOT_TEXTURES_CNT + 1;
     int ordersCnt = rand() % (int)Tiles::foodTilesSize + 1; // 1 <= orders <= zones::foodTilesSize
     sf::Vector2i botSpawnPos = Tile::getGridPosition(spawnTiles[rand()%spawnTiles.size()].getPosition() - shopBG.getPosition());
