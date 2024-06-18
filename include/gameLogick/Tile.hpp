@@ -5,11 +5,10 @@
 #pragma once
 #include "dep.hpp"
 
-class Tile : public sf::Drawable {
+class Tile {
     sf::RectangleShape rect;
     Tiles tileType;
     sf::Vector2f position;
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     
 public:
     Tile() { };

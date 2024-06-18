@@ -121,7 +121,6 @@ void Button::setString(std::string str) {
     updateLabelPos();
 }
 
-// Getters
 sf::Vector2f Button::getSize() {
     return size;
 }

@@ -39,6 +39,7 @@ void Bot::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Bot::update(float dt, sf::Vector2f offset, std::vector<std::vector<Tile>>& grid) {
+    if (state == BotState::leaved) return; // don't update leaved bot
     posOnScreen = sprite.getPosition() + sf::Vector2f(BOT_SIZE/2.f, BOT_SIZE/4.f*3.f);
     posInGrid = sf::Vector2i(posOnScreen - offset) / TILE_SIZE;
 
@@ -106,25 +107,6 @@ void Bot::generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Til
         path.push_back(cur);
     }
     path.pop_back();
-    
-    /*  =====DEBUG=======
-    *   TODO::Delete
-    for (int i = 0; i < WORLD_HEIGHT; i++) {
-        for (int j = 0; j < WORLD_WIDTH; j++) {
-            bool isPath = false;
-            for (sf::Vector2i &point : path)
-                if (point.x == j && point.y == i) {
-                    isPath = true;
-                    break;
-                }
-            if (isPath) std::cout << "+";
-            else std::cout << (int)grid[i][j].getType() - (int)Tiles::no_tile; 
-            std::cout << " ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << target.x << " " << target.y << "\n";
-    */
 }
 
 void Bot::moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std::vector<std::vector<Tile>>& grid) {
@@ -134,17 +116,6 @@ void Bot::moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std
     bool isMove = true;
     int col = int(frameTime) * BOT_SIZE;
 
-    /*  =====DEBUG=======
-    *   TODO::Delete
-    std::cout << "\x1B[2J\x1B[H";
-    for (int i = 0; i < WORLD_HEIGHT; i++) {
-        for (int j = 0; j < WORLD_WIDTH; j++) {
-            if (i == posInGrid.y && j == posInGrid.x) std::cout << "#" << " ";
-            else std::cout << (int)grid[i][j].getType() - (int)Tiles::no_tile << " ";
-        }
-        std::cout << "\n";
-    }
-    */
     sf::Vector2f targetPos = Tile::getScreenPosition(target) + offset + sf::Vector2f(TILE_SIZE/2.f, TILE_SIZE/2.f);
 
     if (posOnScreen.y < targetPos.y - TARGET_OFFSET) {

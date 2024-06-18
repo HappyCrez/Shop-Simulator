@@ -42,12 +42,6 @@ void GameField::createTiles() {
 void GameField::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(shopBG);
 
-    /*  =====DEBUG======
-        TODO::Delete
-    for (std::vector<Tile> &vec : grid)
-        for (Tile &tile : vec)
-            target.draw(tile);
-    */
     for (int i = 0; i < bots.size(); i++)
         target.draw(bots[i]);
 }    
