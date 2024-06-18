@@ -2,14 +2,10 @@
 *   Defenitions of program
 *   Most common enums, directory paths, etc.
 */
-#define INT_MAX 0x7FFFFFFF
+#define INT32_MAXIMUM 0x7FFFFFFF
 
-enum class Screens : int {no_screen = -1, start, settings, load, game, size};
+enum class Screens : int {no_screen = -1, start, settings, game, size};
 enum class Align {top_left, top_right, bottom_left, bottom_right, center};
-enum class Tiles {
-    no_tile = -4, obstacle, spawn, buy, // special tiles
-    lettuce, carrot, tomato, eggplant, potato, grape, banana, watermellon, corn, onion, strawberrie, cauliflower, foodTilesSize // food tiles 
-};
 enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 
 #define DAY_WORK_TIME           600.f   // 10 minutes
@@ -17,6 +13,10 @@ enum class GameSpeed {stop, slow, fast, very_fast, skip, size};
 #define SHOP_OPEN_TIME          9
 
 // Tiles types
+enum class Tiles {
+    no_tile = -4, obstacle, spawn, buy, // special tiles
+    lettuce, carrot, tomato, eggplant, potato, grape, banana, watermellon, corn, onion, strawberrie, cauliflower, foodTilesSize // food tiles 
+};
 #define ZONES_MAP               "./assets/files/ZonesMap.txt"
 #define WORLD_WIDTH             30
 #define WORLD_HEIGHT            25
@@ -39,8 +39,10 @@ enum class BotState {alive, pay, leaved};
 #define BOT_MIN_SPEED           6
 #define TARGET_OFFSET           5
 
-
 // Fonts
 #define MONTSERRAT_FONT     "./assets/fonts/Montserrat.ttf"
 #define ROBOTO_BOLD_FONT    "./assets/fonts/Roboto-Bold.ttf"
 #define BLAZMA_FONT         "./assets/fonts/Blazma-Regular.ttf"
+
+// Music
+#define MUSIC_ABSTRACT      "./assets/music/Abstract.ogg"

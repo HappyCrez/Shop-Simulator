@@ -3,6 +3,7 @@
 #include "gameLogick/Screen.hpp"
 #include "gameLogick/StartScreen.hpp"
 #include "gameLogick/GameScreen.hpp"
+#include "gameLogick/SettingsScreen.hpp"
 
 void loadAllReferences() {
     AssetsManager::loadTexture(START_SCREEN_BACKGROUND);
@@ -12,6 +13,12 @@ void loadAllReferences() {
         AssetsManager::loadTexture(BOT_TEXTURE_MOVE_BASE + std::to_string(textureNum) + ".png");
         AssetsManager::loadTexture(BOT_TEXTURE_IDLE_BASE + std::to_string(textureNum) + ".png");
     }
+
+    // Background music
+    sf::Sound& sound = AssetsManager::loadSound(MUSIC_ABSTRACT);
+    sound.setLoop(true);
+    sound.setVolume(50.f);
+    sound.play();
 
     // Singleton with deffered initialization,
     // so first configuration should be in launcher
@@ -29,13 +36,16 @@ int main() {
     loadAllReferences();
 
     sf::Clock deltaClock;
-    srand(time(0));  // set rand seed
+    srand(static_cast<unsigned int>(time(0)));  // set rand seed
 
     Screens screenState = Screens::start;
     StartScreen startScreen(wnd, screenState);
-    GameScreen gameScreen(wnd, screenState); 
-    GameScreens[(int)Screens::start] = &startScreen;
-    GameScreens[(int)Screens::game] = &gameScreen;
+    GameScreen gameScreen(wnd, screenState);
+    SettingsScreen settingsScreen(wnd, screenState);
+    
+    GameScreens[(int)Screens::start]    = &startScreen;
+    GameScreens[(int)Screens::game]     = &gameScreen;
+    GameScreens[(int)Screens::settings] = &settingsScreen;
     
     while (wnd.isOpen()) {
         sf::Event event;
@@ -43,8 +53,6 @@ int main() {
             // In depend of what screen now is renders
             // we render it and send it events
             GameScreens[(int)screenState]->render(event);
-            if (screenState != Screens::start && screenState != Screens::game)
-                screenState = Screens::start;
             
             // TODO::Controll function/class
             if (event.type == sf::Event::KeyPressed)

@@ -54,7 +54,7 @@ sf::Vector2i Bot::getNextTarget(std::vector<std::vector<Tile>>& grid, Tiles& pur
     
     // find neareast purpose tile
     sf::Vector2i target;
-    int dist = INT_MAX;
+    int dist = INT32_MAX;
     for (int i = 0; i < WORLD_HEIGHT; i++) {
         for (int j = 0; j < WORLD_WIDTH; j++) {
             if (grid[i][j].getType() != purpose) continue;

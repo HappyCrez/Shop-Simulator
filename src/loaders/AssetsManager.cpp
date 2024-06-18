@@ -29,3 +29,12 @@ std::string AssetsManager::loadTextFile(std::string filename) {
         text.append(line);
     return text;
 }
+
+sf::Sound& AssetsManager::loadSound(std::string filename) {
+    auto& soundBufferMap = getInstance().soundBufferFiles;
+    auto& soundsMap = getInstance().soundsFiles;
+    if (soundsMap.find(filename) != soundsMap.end()) return soundsMap[filename];
+    soundBufferMap[filename].loadFromFile(filename);
+    soundsMap[filename].setBuffer(soundBufferMap[filename]);
+    return soundsMap[filename];
+}

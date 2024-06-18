@@ -4,7 +4,7 @@ GameScreen::GameScreen(sf::RenderWindow &wnd, Screens& screenState) : Screen(wnd
     sf::Vector2f wndSize = sf::Vector2f(wnd.getSize());
     
     background = sf::RectangleShape(wndSize);
-    background.setFillColor(sf::Color(68,89,93)); // dark gray
+    background.setFillColor(sf::Color(68,89,93)); // dark blue
 
     sf::Vector2f center = sf::Vector2f((wnd.getSize() - sf::Vector2u(WORLD_WIDTH*TILE_SIZE, WORLD_HEIGHT*TILE_SIZE)) / 2u);
     gameField.setPosition(center);

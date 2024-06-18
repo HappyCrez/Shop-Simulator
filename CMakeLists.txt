@@ -18,6 +18,7 @@ set(sources src/Launcher.cpp
             src/gameLogick/Screen.cpp
             src/gameLogick/StartScreen.cpp
             src/gameLogick/GameScreen.cpp
+            src/gameLogick/SettingsScreen.cpp
             # Logick
             src/gameLogick/GameField.cpp
             src/gameLogick/ControlPanel.cpp
