@@ -6,9 +6,9 @@
 #pragma once
 #include "dep.hpp"
 #include "gameLogick/GameField.hpp"
-#include "UI/Button.hpp"
-#include "UI/ScrollBar.hpp"
 #include "loaders/AssetsManager.hpp"
+#include "UI/ScrollBar.hpp"
+#include "UI/Button.hpp"
 
 enum class LabelType {
     day_count, day_time,

@@ -1,6 +1,6 @@
 /*
 *   Class inhereted Drawable
-*   Funcs: Controls on simulation, buttons, bars, etc.
+*   Funcs: Control bar
 */
 #pragma once
 #include "dep.hpp"
