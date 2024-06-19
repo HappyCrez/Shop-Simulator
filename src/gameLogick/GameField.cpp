@@ -22,7 +22,7 @@ void GameField::createTiles() {
     for (int i = 0; i < rowCnt; i++) {
         for (int j = 0; j < colCnt; j++) {
             zonesMap.erase(zonesMap.begin(), std::find(zonesMap.begin(), zonesMap.end(), ',') + 1);
-            tileType = atoi(zonesMap.data()) + (int)Tiles::no_tile; // some tiles are special
+            tileType = atoi(zonesMap.data()) + (int)Tiles::empty; // some tiles are special
 
             Tile tile((Tiles)tileType, {
                 static_cast<float>(j * TILE_SIZE),  // Position on the screen 

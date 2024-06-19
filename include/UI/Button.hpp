@@ -33,7 +33,6 @@ public:
     // Label
     void setLabel(sf::Font& font, std::string content, sf::Color color, int fontSize, Align align, sf::Text::Style style);
     void setFont(sf::Font& font);
-    void setLabelContent(std::string content);
     void setTextColor(sf::Color color);
     void setFontSize(int size);
     void setAlign(Align align);

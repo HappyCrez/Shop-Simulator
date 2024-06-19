@@ -89,7 +89,7 @@ void Bot::generatePathToTarget(sf::Vector2i& target, std::vector<std::vector<Til
             if (col <= 0 || col >= WORLD_WIDTH  ||
                 row <= 0 || row >= WORLD_HEIGHT ||
                 (prev[row][col].x != -1 && prev[row][col].y != -1) ||
-                (grid[row][col].getType() != Tiles::no_tile && grid[row][col].getType() != purpose))
+                (grid[row][col].getType() != Tiles::empty && grid[row][col].getType() != purpose))
                 { continue; }
 
             prev[row][col] = curPos;
@@ -136,7 +136,7 @@ void Bot::moveToTarget(float dt, sf::Vector2i& target, sf::Vector2f& offset, std
     }
     else {
         // Path point
-        if (grid[posInGrid.y][posInGrid.x].getType() == Tiles::no_tile)
+        if (grid[posInGrid.y][posInGrid.x].getType() == Tiles::empty)
         {   path.pop_back(); }
         else  { // Idle
             isMove = false;
@@ -171,7 +171,7 @@ void Bot::moveDirection(BotTurn turn, float dt) {
 }
 
 void Bot::onTheDestProceed(float dt, Tiles purpose) {
-    if (purpose == Tiles::no_tile) {
+    if (purpose == Tiles::empty) {
         path.pop_back();
         return;
     }

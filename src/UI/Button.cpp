@@ -92,11 +92,6 @@ void Button::setFont(sf::Font& font) {
     updateLabelPos();
 }
 
-void Button::setLabelContent(std::string content) {
-    label.setString(content);
-    updateLabelPos();
-}
-
 void Button::setFontSize(int fontSize) {
     label.setCharacterSize(fontSize);
     updateLabelPos();
