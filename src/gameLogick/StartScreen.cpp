@@ -67,7 +67,6 @@ void StartScreen::onHover(Button& btn) {
 }
 
 void StartScreen::resize(sf::Vector2f& wndSize) {
-    // TODO::Resize logick
     sf::Vector2f rightTopBound = {wndSize.x - btns[(int)Btns::startGame].getSize().x - 100.f, 100.f};
     static int spaceBeetwenBtns = 30;
     btns[(int)Btns::load].setPosition({

@@ -53,7 +53,6 @@ void Button::setOutline(float size, sf::Color color) {
     rect.setOutlineColor(color);
 }
 
-//TODO::Update label pos by align
 void Button::updateLabelPos() {
     sf::Vector2f pos;
     switch (align) {

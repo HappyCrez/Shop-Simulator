@@ -42,7 +42,6 @@ void ScrollBar::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 
 void ScrollBar::update(sf::Event& event) {
-    // TODO::Scroll logick
     sf::Vector2i mousePos;
     sf::Vector2i thumbPos;
     int thumbSize;
