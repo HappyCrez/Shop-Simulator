@@ -37,7 +37,7 @@ enum class BotState {alive, pay, leaved};
 #define BOT_WAIT_BAR_HEIGHT     4.f
 #define BOT_WAIT_BAR_WIDTH_COEF 4.f
 #define BOT_MIN_SPEED           6
-#define TARGET_OFFSET           5
+#define TARGET_OFFSET           10
 
 // Fonts
 #define MONTSERRAT_FONT     "./assets/fonts/Montserrat.ttf"
