@@ -1,7 +1,7 @@
 # Shop simulator
 Summer practice on theme "Life simulations"
 
-Precompiled binaries in "bin" directory for window system.
+Precompiled binaries in "bin" directory for window and linux system.
 For correct app launch now is need monitor resolution 1980x1080, neighbor *.dll and assets files
 App writes on C++ with using SFML 2.6.1 for *x64 systems*
 

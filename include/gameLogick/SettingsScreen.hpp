@@ -28,8 +28,8 @@ class SettingsScreen : public Screen {
 
     void resize(sf::Vector2f wndSize);
 
-    void SettingsScreen::onHover(Button& btn);
-    void SettingsScreen::dropHover(Button& btn);
+    void onHover(Button& btn);
+    void dropHover(Button& btn);
 
 public:
     SettingsScreen(sf::RenderWindow &wnd, Screens& screenState);
